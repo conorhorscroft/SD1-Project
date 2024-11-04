@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
@@ -23,12 +24,31 @@ export default function TabLayout() {
           ),
         }}
       />
+   
       <Tabs.Screen
-        name="explore"
+        name="workouts"
         options={{
-          title: 'Explore',
+          title: 'Workouts',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'barbell' : 'barbell-outline'} color={color} />
+          ),
+        }}
+      />
+        <Tabs.Screen
+        name="nutrition"
+        options={{
+          title: 'Nutrition',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'nutrition' : 'nutrition-outline'} color={color} />
+          ),
+        }}
+      />
+       <Tabs.Screen
+        name="health"
+        options={{
+          title: 'Health',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'heart' : 'heart-outline'} color={color} />
           ),
         }}
       />
