@@ -1,10 +1,10 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Tabs } from "expo-router";
+import React from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,42 +12,59 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: "Home",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <TabBarIcon
+              name={focused ? "home" : "home-outline"}
+              color={color}
+            />
           ),
         }}
       />
-   
+
       <Tabs.Screen
         name="workouts"
         options={{
-          title: 'Workouts',
+          title: "Workouts",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'barbell' : 'barbell-outline'} color={color} />
+            <TabBarIcon
+              name={focused ? "barbell" : "barbell-outline"}
+              color={color}
+            />
           ),
         }}
       />
-        <Tabs.Screen
+      <Tabs.Screen
         name="nutrition"
         options={{
-          title: 'Nutrition',
+          title: "Nutrition",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'nutrition' : 'nutrition-outline'} color={color} />
+            <TabBarIcon
+              name={focused ? "nutrition" : "nutrition-outline"}
+              color={color}
+            />
           ),
         }}
       />
-       <Tabs.Screen
+      <Tabs.Screen
         name="health"
         options={{
-          title: 'Health',
+          title: "Health",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'heart' : 'heart-outline'} color={color} />
+            <TabBarIcon
+              name={focused ? "heart" : "heart-outline"}
+              color={color}
+            />
           ),
         }}
       />

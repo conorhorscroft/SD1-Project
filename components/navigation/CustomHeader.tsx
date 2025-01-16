@@ -1,12 +1,25 @@
-import { View, Text, SafeAreaView } from 'react-native'
-import React from 'react'
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
+import React from "react";
 
 const CustomHeader = () => {
   return (
-    <SafeAreaView style={{ flex: 1}}>
-      <Text>CustomHeader </Text>
+    <SafeAreaView style={styles.header}>
+      <Text style={styles.header}>SlainteFit </Text>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default CustomHeader
+export default CustomHeader;
+
+const styles = StyleSheet.create({
+  header: {
+     flex: 1,
+     textAlign: "center",
+     fontSize: 16,
+     padding: 10,
+     color: "green",
+     backgroundColor: "gold",
+  }
+
+})
+

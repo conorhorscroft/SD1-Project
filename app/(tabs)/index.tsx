@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Button} from 'react-native';
-import Slider from '@react-native-community/slider';
+import React, { useState } from "react";
+import { View, TextInput, Text, StyleSheet, Button } from "react-native";
+import Slider from "@react-native-community/slider";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [age, setAge] = useState(18); // Slider for Age
   const [experience, setExperience] = useState(1); // Slider for Experience Level
 
   const handleSave = () => {
     // Add functionality to save or handle the user info here
-    alert(`User Info: \nName: ${name} \nEmail: ${email} \nPhone: ${phone} \nAge: ${age} \nExperience Level: ${experience}`);
+    alert(
+      `User Info: \nName: ${name} \nEmail: ${email} \nPhone: ${phone} \nAge: ${age} \nExperience Level: ${experience}`
+    );
   };
 
   return (
     <View style={styles.container}>
+      <Link href="/profile">Click here to go to profile</Link>
+
       <Text style={styles.title}>User Information</Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -70,23 +75,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    justifyContent: "center",
+    backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     padding: 10,
     marginBottom: 15,
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   slider: {
     height: 40,
