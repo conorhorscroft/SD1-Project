@@ -1,21 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 export default function NutritionScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Nutrition</Text>
-      
-      {/* Placeholder for todays nutrition */}
-      <View style={styles.placeholder}>
-        <Text>Today's Nutrition Placeholder</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Nutrition</Text>
+
+        {/* Placeholder for todays nutrition */}
+        <View style={styles.placeholder}>
+          <Text>Today's Nutrition Placeholder</Text>
+        </View>
+
+        {/* Placeholder for previous days */}
+        <View style={styles.placeholder}>
+          <Text>Previous Days Nutrition Placeholder</Text>
+        </View>
       </View>
-      
-      {/* Placeholder for previous days */}
-      <View style={styles.placeholder}>
-        <Text>Previous Days Nutrition Placeholder</Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 

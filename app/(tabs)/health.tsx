@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -16,22 +17,24 @@ export default function HealthScreen() {
   const { steps, distance, flights } = useHealthData();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Health</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Health</Text>
 
-      {/* Placeholder for daily steps chart */}
-      <View style={styles.placeholder}>
-        {/* <Value label="Steps" value={steps.toString()} />
+        {/* Placeholder for daily steps chart */}
+        <View style={styles.placeholder}>
+          {/* <Value label="Steps" value={steps.toString()} />
         <Value label="Distance" value={`${(distance / 1000).toFixed(2)} km`} />
         <Value label="Flights Climbed" value={flights.toString()} /> */}
-        <Text>Daily Steps Chart Placeholder</Text>
-      </View>
+          <Text>Daily Steps Chart Placeholder</Text>
+        </View>
 
-      {/* Placeholder for water intake chart */}
-      <View style={styles.placeholder}>
-        <Text>Water Intake Chart Placeholder</Text>
+        {/* Placeholder for water intake chart */}
+        <View style={styles.placeholder}>
+          <Text>Water Intake Chart Placeholder</Text>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
