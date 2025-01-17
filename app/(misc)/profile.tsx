@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet, Button } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Link } from "expo-router";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
   const [name, setName] = useState("");
@@ -19,54 +19,56 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>User Information</Text>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.title}>User Information</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="phone-pad"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Phone"
+          value={phone}
+          onChangeText={setPhone}
+          keyboardType="phone-pad"
+        />
 
-      {/* Age Slider */}
-      <Text>Age: {age}</Text>
-      <Slider
-        style={styles.slider}
-        minimumValue={18}
-        maximumValue={100}
-        step={1}
-        value={age}
-        onValueChange={(value) => setAge(value)}
-      />
+        {/* Age Slider */}
+        <Text>Age: {age}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={18}
+          maximumValue={100}
+          step={1}
+          value={age}
+          onValueChange={(value) => setAge(value)}
+        />
 
-      {/* Experience Level Slider */}
-      <Text>Experience Level: {experience}</Text>
-      <Slider
-        style={styles.slider}
-        minimumValue={1}
-        maximumValue={10}
-        step={1}
-        value={experience}
-        onValueChange={(value) => setExperience(value)}
-      />
+        {/* Experience Level Slider */}
+        <Text>Experience Level: {experience}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={10}
+          step={1}
+          value={experience}
+          onValueChange={(value) => setExperience(value)}
+        />
 
-      <Button title="Save" onPress={handleSave} />
-    </View>
+        <Button title="Save" onPress={handleSave} />
+      </View>
+    </SafeAreaView>
   );
 }
 

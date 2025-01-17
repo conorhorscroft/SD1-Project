@@ -1,27 +1,35 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
- 
-
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.profileButton}>
-        <Link href="/(misc)/profile">
-        <Ionicons name="person-circle" size={32} color="black" />
-        </Link>
-      </TouchableOpacity>
-      <Text style={styles.title}>Welcome to SlainteFit!</Text>
-      <View style={styles.placeholder}>
-        <Text>Graphics Here</Text>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.profileButton}>
+          <Link href="/(misc)/profile">
+            <Ionicons name="person-circle" size={32} color="black" />
+          </Link>
+        </TouchableOpacity>
+        <Text style={styles.title}>Welcome to SlainteFit!</Text>
+        <View style={styles.placeholder}>
+          <Text>Graphics Here</Text>
+        </View>
+        <View style={styles.placeholder}>
+          <Text>More Info here</Text>
+        </View>
       </View>
-      <View style={styles.placeholder}>
-        <Text>More Info here</Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
   profileButton: {
     position: "absolute",
     top: 20,
-    right: 20, 
-    zIndex: 10, 
+    right: 20,
+    zIndex: 10,
   },
 });
