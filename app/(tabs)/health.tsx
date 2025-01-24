@@ -23,7 +23,7 @@ const permissions = {
       AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
       AppleHealthKit.Constants.Permissions.FlightsClimbed,
     ],
-    write: [AppleHealthKit.Constants.Permissions.Steps],
+    // write: [AppleHealthKit.Constants.Permissions.Steps],
   },
 } as HealthKitPermissions;
 

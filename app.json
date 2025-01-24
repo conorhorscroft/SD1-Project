@@ -4,22 +4,26 @@
     "slug": "uni-project",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.jpg",
+    "icon": "./assets/images/favicon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash.jpg",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.uni-project"
+      "bundleIdentifier": "com.anonymous.uni-project",
+      "infoPlist": {
+        "NSHealthUpdateUsageDescription": "We need access to your health data to update and sync your health statistics.",
+        "NSHealthShareUsageDescription": "We need access to your health data to read your activity and health information."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#ffffff"
       }
     },
