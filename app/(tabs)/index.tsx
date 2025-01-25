@@ -6,11 +6,51 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart,
+} from "react-native-chart-kit";
+
+const screenWidth = Dimensions.get("window").width;
+
+const data = {
+  labels: ["Swim", "Bike", "Run"], // optional
+  data: [0.4, 0.6, 0.8],
+};
+
+const dataTwo = {
+  labels: ["January", "February", "March", "April", "May", "June"],
+  datasets: [
+    {
+      data: [20, 45, 28, 80, 99, 43],
+      color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+      strokeWidth: 2, // optional
+    },
+  ],
+  legend: ["Number of Workouts per week"], // optional
+};
+
+const chartConfig = {
+  backgroundGradientFrom: "#ffffff", // Start of gradient (white background)
+  backgroundGradientFromOpacity: 0,
+  backgroundGradientTo: "#f2f2f2", // Soft light gray
+  backgroundGradientToOpacity: 0,
+  color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`, // Garmin-like blue
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Black labels
+  strokeWidth: 3, // Slightly bolder lines for visibility
+  barPercentage: 0.7, // Slightly wider bars
+  // useShadowColorFromDataset: true, // Use shadow for a modern look
+};
 
 export default function HomeScreen() {
   return (
@@ -22,11 +62,32 @@ export default function HomeScreen() {
           </Link>
         </TouchableOpacity>
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
-        <View style={styles.placeholder}>
-          <Text>Graphics Here</Text>
-        </View>
-        <View style={styles.placeholder}>
-          <Text>More Info here</Text>
+
+        <View style={styles.chartContainer}>
+          <View style={styles.chartCard}>
+            <Text style={styles.chartLabel}>Progress Chart</Text>
+            <ProgressChart
+              data={data}
+              width={screenWidth - 40}
+              height={220}
+              strokeWidth={16}
+              radius={32}
+              chartConfig={chartConfig}
+              hideLegend={false}
+            />
+          </View>
+
+          <View style={styles.chartCard}>
+            <Text style={styles.chartLabel}>Monthly Exercise</Text>
+            <LineChart
+              data={dataTwo}
+              width={screenWidth}
+              height={256}
+              verticalLabelRotation={30}
+              chartConfig={chartConfig}
+              bezier
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -46,19 +107,31 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  placeholder: {
-    width: "100%",
-    height: 300,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
   profileButton: {
     position: "absolute",
     top: 20,
     right: 20,
     zIndex: 10,
+  },
+  chartCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 20,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5, // Adds shadow for Android
+  },
+  chartLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#555",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  chartContainer: {
+    marginBottom: 3,
   },
 });
