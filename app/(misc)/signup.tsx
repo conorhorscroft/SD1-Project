@@ -3,8 +3,10 @@ import { View, TextInput, Text, StyleSheet, Button } from "react-native";
 import Slider from "@react-native-community/slider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
+import { useRouter } from "expo-router";
 
 export default function SignUp({ navigation }) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,7 +42,7 @@ export default function SignUp({ navigation }) {
 
       if (response.status === 201) {
         alert("Account created successfully!");
-        navigation.navigate("signin");
+        router.push("/signin");
       }
     } catch (err) {
       setError("Error creating account. Please try again.");
