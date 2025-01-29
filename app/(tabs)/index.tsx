@@ -7,11 +7,17 @@ import {
   Button,
   TouchableOpacity,
   Dimensions,
+  Platform,
+  StatusBar,
+  ScrollView,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import {
   LineChart,
   BarChart,
@@ -53,43 +59,49 @@ const chartConfig = {
 };
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.profileButton}>
-          <Link href="/(misc)/profile">
-            <Ionicons name="person-circle" size={32} color="black" />
-          </Link>
-        </TouchableOpacity>
-        <Text style={styles.title}>Welcome to SlainteFit!</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={[styles.profileButton, { top: insets.top - 43 }]}
+          >
+            <Link href="/(misc)/profile">
+              <Ionicons name="person-circle" size={32} color="black" />
+            </Link>
+          </TouchableOpacity>
+          <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
-        <View style={styles.chartContainer}>
-          <View style={styles.chartCard}>
-            <Text style={styles.chartLabel}>Progress Chart</Text>
-            <ProgressChart
-              data={data}
-              width={screenWidth - 40}
-              height={220}
-              strokeWidth={16}
-              radius={32}
-              chartConfig={chartConfig}
-              hideLegend={false}
-            />
-          </View>
+          <View style={styles.chartContainer}>
+            <View style={styles.chartCard}>
+              <Text style={styles.chartLabel}>Progress Chart</Text>
+              <ProgressChart
+                data={data}
+                width={screenWidth - 70}
+                height={220}
+                strokeWidth={16}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={false}
+              />
+            </View>
 
-          <View style={styles.chartCard}>
-            <Text style={styles.chartLabel}>Monthly Exercise</Text>
-            <LineChart
-              data={dataTwo}
-              width={screenWidth}
-              height={256}
-              verticalLabelRotation={30}
-              chartConfig={chartConfig}
-              bezier
-            />
+            <View style={styles.chartCard}>
+              <Text style={styles.chartLabel}>Monthly Exercise</Text>
+              <LineChart
+                data={dataTwo}
+                width={screenWidth - 60}
+                height={256}
+                verticalLabelRotation={30}
+                chartConfig={chartConfig}
+                bezier
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -98,7 +110,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "#f5f5f5",
   },
   title: {
@@ -106,11 +118,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    marginRight: 10,
   },
   profileButton: {
     position: "absolute",
-    top: 20,
-    right: 20,
+    // top: Platform.OS === "ios" ? 50 : StatusBar.currentHeight + 10 || 20,
+    right: 30,
     zIndex: 10,
   },
   chartCard: {
@@ -132,6 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   chartContainer: {
-    marginBottom: 3,
+    flex: 1,
+    marginBottom: 10,
   },
 });
