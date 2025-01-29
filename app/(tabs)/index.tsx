@@ -62,47 +62,45 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={[styles.profileButton, { top: insets.top - 43 }]}
-          >
-            <Link href="/(misc)/profile">
-              <Ionicons name="person-circle" size={32} color="black" />
-            </Link>
-          </TouchableOpacity>
-          <Text style={styles.title}>Welcome to SlainteFit!</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={[styles.profileButton, { top: insets.top - 43 }]}
+        >
+          <Link href="/(misc)/profile">
+            <Ionicons name="person-circle" size={32} color="black" />
+          </Link>
+        </TouchableOpacity>
+        <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
-          <View style={styles.chartContainer}>
-            <View style={styles.chartCard}>
-              <Text style={styles.chartLabel}>Progress Chart</Text>
-              <ProgressChart
-                data={data}
-                width={screenWidth - 70}
-                height={220}
-                strokeWidth={16}
-                radius={32}
-                chartConfig={chartConfig}
-                hideLegend={false}
-              />
-            </View>
+        <View style={styles.chartContainer}>
+          <View style={styles.chartCard}>
+            <Text style={styles.chartLabel}>Progress Chart</Text>
+            <ProgressChart
+              data={data}
+              width={screenWidth - 70}
+              height={220}
+              strokeWidth={16}
+              radius={32}
+              chartConfig={chartConfig}
+              hideLegend={false}
+            />
+          </View>
 
-            <View style={styles.chartCard}>
-              <Text style={styles.chartLabel}>Monthly Exercise</Text>
-              <LineChart
-                data={dataTwo}
-                width={screenWidth - 60}
-                height={256}
-                verticalLabelRotation={30}
-                chartConfig={chartConfig}
-                bezier
-              />
-            </View>
+          <View style={styles.chartCard}>
+            <Text style={styles.chartLabel}>Monthly Exercise</Text>
+            <LineChart
+              data={dataTwo}
+              width={screenWidth - 60}
+              height={256}
+              verticalLabelRotation={30}
+              chartConfig={chartConfig}
+              bezier
+            />
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 }
 

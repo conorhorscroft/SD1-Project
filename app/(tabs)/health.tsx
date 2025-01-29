@@ -95,39 +95,37 @@ export default function HealthScreen() {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.header}>Health</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Health</Text>
 
-          {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <>
-              {/* Steps */}
-              <View style={styles.dataBlock}>
-                <Text style={styles.label}>Steps</Text>
-                <Text style={styles.value}>{steps.toString()}</Text>
-              </View>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            {/* Steps */}
+            <View style={styles.dataBlock}>
+              <Text style={styles.label}>Steps</Text>
+              <Text style={styles.value}>{steps.toString()}</Text>
+            </View>
 
-              {/* Distance */}
-              <View style={styles.dataBlock}>
-                <Text style={styles.label}>Distance</Text>
-                <Text style={styles.value}>
-                  {(distance / 1000).toFixed(2)} km
-                </Text>
-              </View>
+            {/* Distance */}
+            <View style={styles.dataBlock}>
+              <Text style={styles.label}>Distance</Text>
+              <Text style={styles.value}>
+                {(distance / 1000).toFixed(2)} km
+              </Text>
+            </View>
 
-              {/* Flights Climbed */}
-              <View style={styles.dataBlock}>
-                <Text style={styles.label}>Flights Climbed</Text>
-                <Text style={styles.value}>{flights.toString()}</Text>
-              </View>
-            </>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            {/* Flights Climbed */}
+            <View style={styles.dataBlock}>
+              <Text style={styles.label}>Flights Climbed</Text>
+              <Text style={styles.value}>{flights.toString()}</Text>
+            </View>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 

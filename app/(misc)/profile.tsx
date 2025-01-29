@@ -14,23 +14,21 @@ export default function Profile() {
   const [experience, setExperience] = useState(3); // Slider for Experience Level
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>User Profile</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>User Profile</Text>
 
-        <Text>Name: {name}</Text>
-        <Text>Email: {email}</Text>
-        <Text>Phone: {phone}</Text>
-        <Text>Weight: {weight}kg</Text>
-        <Text>Height: {height}cm</Text>
-        <Text>Age: {age} years</Text>
-        <Text>Experience Level: {experience}</Text>
+      <Text>Name: {name}</Text>
+      <Text>Email: {email}</Text>
+      <Text>Phone: {phone}</Text>
+      <Text>Weight: {weight}kg</Text>
+      <Text>Height: {height}cm</Text>
+      <Text>Age: {age} years</Text>
+      <Text>Experience Level: {experience}</Text>
 
-        <Link href="/(misc)/signup" style={styles.link}>
-          Create an Account
-        </Link>
-      </View>
-    </SafeAreaView>
+      <Link href="/(misc)/signup" style={styles.link}>
+        Create an Account
+      </Link>
+    </View>
   );
 }
 
