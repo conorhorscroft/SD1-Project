@@ -1,11 +1,21 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { Stack, useNavigation } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function MiscLayout() {
   const colorScheme = useColorScheme();
+
+  const navigation = useNavigation();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerBackTitle: "Home",
+      title: "",
+    });
+  }, [navigation]);
 
   return (
     <>
@@ -14,6 +24,8 @@ export default function MiscLayout() {
           name="profile"
           options={{
             headerShown: true,
+            title: "Profile",
+            headerBackTitle: "Home",
           }}
         />
         <Stack.Screen

@@ -51,33 +51,31 @@ export default function Login({ navigation }: LoginScreenProps) {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
 
-        <Button
-          title={loading ? "Logging In..." : "Log In"}
-          onPress={handleLogin}
-          disabled={loading}
-        />
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-      </View>
-    </SafeAreaView>
+      <Button
+        title={loading ? "Logging In..." : "Log In"}
+        onPress={handleLogin}
+        disabled={loading}
+      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+    </View>
   );
 }
 

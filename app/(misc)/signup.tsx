@@ -52,91 +52,89 @@ export default function SignUp({ navigation }) {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>Create User Profile</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Create User Profile</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Phone"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="phone-pad"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Weight"
-          value={weight}
-          onChangeText={setWeight}
-          keyboardType="phone-pad"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Height"
-          value={height}
-          onChangeText={setHeight}
-          keyboardType="phone-pad"
-        />
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone"
+        value={phone}
+        onChangeText={setPhone}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Weight"
+        value={weight}
+        onChangeText={setWeight}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Height"
+        value={height}
+        onChangeText={setHeight}
+        keyboardType="phone-pad"
+      />
 
-        {/* Age Slider */}
-        <Text>Age: {age}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={18}
-          maximumValue={100}
-          step={1}
-          value={age}
-          onValueChange={(value) => setAge(value)}
-        />
+      {/* Age Slider */}
+      <Text>Age: {age}</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={18}
+        maximumValue={100}
+        step={1}
+        value={age}
+        onValueChange={(value) => setAge(value)}
+      />
 
-        {/* Experience Level Slider */}
-        <Text>Experience Level: {experience}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={1}
-          maximumValue={10}
-          step={1}
-          value={experience}
-          onValueChange={(value) => setExperience(value)}
-        />
+      {/* Experience Level Slider */}
+      <Text>Experience Level: {experience}</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={experience}
+        onValueChange={(value) => setExperience(value)}
+      />
 
-        {/* Password Fields */}
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
+      {/* Password Fields */}
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
 
-        <Button
-          title={loading ? "Signing Up..." : "Sign Up!"}
-          onPress={handleSave}
-          disabled={loading}
-        />
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-      </View>
-    </SafeAreaView>
+      <Button
+        title={loading ? "Signing Up..." : "Sign Up!"}
+        onPress={handleSave}
+        disabled={loading}
+      />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+    </View>
   );
 }
 

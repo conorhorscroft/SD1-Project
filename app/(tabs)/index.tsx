@@ -65,7 +65,10 @@ export default function HomeScreen() {
     <ScrollView>
       <View style={styles.container}>
         <TouchableOpacity
-          style={[styles.profileButton, { top: insets.top - 43 }]}
+          style={[
+            styles.profileButton,
+            { top: Platform.OS === "web" ? 20 : insets.top - 43 || 20 },
+          ]}
         >
           <Link href="/(misc)/profile">
             <Ionicons name="person-circle" size={32} color="black" />
