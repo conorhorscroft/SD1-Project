@@ -64,16 +64,6 @@ export default function HomeScreen() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={[
-            styles.profileButton,
-            { top: Platform.OS === "web" ? 20 : insets.top - 43 || 20 },
-          ]}
-        >
-          <Link href="/(misc)/profile">
-            <Ionicons name="person-circle" size={32} color="black" />
-          </Link>
-        </TouchableOpacity>
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
         <View style={styles.chartContainer}>
