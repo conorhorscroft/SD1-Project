@@ -12,7 +12,7 @@ export default function MiscLayout() {
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerBackTitle: "Home",
+      headerBackTitle: "Back",
       title: "",
     });
   }, [navigation]);
@@ -36,6 +36,12 @@ export default function MiscLayout() {
         />
         <Stack.Screen
           name="signup"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="verify"
           options={{
             headerShown: false,
           }}

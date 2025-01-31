@@ -12,7 +12,12 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarStyle: {
+          backgroundColor: "#2E7D32",
+          paddingBottom: 10,
+        },
+        tabBarActiveTintColor: "#FFB84D",
+        tabBarInactiveTintColor: "#FFFFFF",
       }}
     >
       <Tabs.Screen
@@ -23,7 +28,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
-              color={color}
+              color={focused ? "#FFB84D" : "#FFFFFF"}
             />
           ),
         }}
@@ -37,7 +42,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "barbell" : "barbell-outline"}
-              color={color}
+              color={focused ? "#FFB84D" : "#FFFFFF"}
             />
           ),
         }}
@@ -50,7 +55,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "nutrition" : "nutrition-outline"}
-              color={color}
+              color={focused ? "#FFB84D" : "#FFFFFF"}
             />
           ),
         }}
@@ -63,7 +68,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "heart" : "heart-outline"}
-              color={color}
+              color={focused ? "#FFB84D" : "#FFFFFF"}
             />
           ),
         }}

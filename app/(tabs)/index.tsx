@@ -55,7 +55,6 @@ const chartConfig = {
   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Black labels
   strokeWidth: 3, // Slightly bolder lines for visibility
   barPercentage: 0.7, // Slightly wider bars
-  // useShadowColorFromDataset: true, // Use shadow for a modern look
 };
 
 export default function HomeScreen() {
@@ -102,23 +101,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "flex-start",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f4f4f4",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
-    marginRight: 10,
+    color: "#333333",
   },
   profileButton: {
     position: "absolute",
-    // top: Platform.OS === "ios" ? 50 : StatusBar.currentHeight + 10 || 20,
     right: 30,
     zIndex: 10,
   },
   chartCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     borderRadius: 12,
     padding: 20,
     marginVertical: 10,
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5, // Adds shadow for Android
+    elevation: 5,
   },
   chartLabel: {
     fontSize: 14,

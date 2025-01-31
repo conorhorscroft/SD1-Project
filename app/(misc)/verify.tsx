@@ -1,59 +1,57 @@
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import { router } from "expo-router";
 
 type RootStackParamList = {
   login: undefined;
   profile: undefined;
+  verify: undefined;
 };
 
 type LoginScreenProps = {
-  navigation: NavigationProp<RootStackParamList, "login">;
+  navigation: NavigationProp<RootStackParamList, "verify">;
 };
 
 export default function Login({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleVerification = async () => {
+    if (!email || !verificationCode) {
+      setError("Please enter your email and verification code.");
+      return;
+    }
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
+      const response = await axios.post("http://localhost:8080/auth/verify", {
         email,
-        password,
+        verificationCode,
       });
 
       if (response.status === 200) {
-        // Store the auth token (use AsyncStorage)
-        await AsyncStorage.setItem("authToken", response.data.token);
-        alert("Logged in successfully!");
-        // Navigate to profile page
-        router.push("/profile");
+        // Account verified
+        alert("Account successfully verified!");
+        // Navigate to log-in page
+        router.push("/signin");
       }
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("Invalid verification code. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  //TODO: implement button to re-send verification email
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Verify Email</Text>
 
       <TextInput
         style={styles.input}
@@ -64,15 +62,14 @@ export default function Login({ navigation }: LoginScreenProps) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        placeholder="Verification Code"
+        value={verificationCode}
+        onChangeText={setVerificationCode}
       />
 
       <Button
-        title={loading ? "Logging In..." : "Log In"}
-        onPress={handleLogin}
+        title={loading ? "Verifying..." : "Verify"}
+        onPress={handleVerification}
         disabled={loading}
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}

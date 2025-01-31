@@ -29,7 +29,7 @@ export default function SignUp({ navigation }) {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/api/user", {
+      const response = await axios.post("http://localhost:8080/auth/signup", {
         name,
         email,
         phone,
@@ -40,9 +40,9 @@ export default function SignUp({ navigation }) {
         password,
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         alert("Account created successfully!");
-        router.push("/signin");
+        router.push("/verify");
       }
     } catch (err) {
       setError("Error creating account. Please try again.");
@@ -77,14 +77,14 @@ export default function SignUp({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Weight"
+        placeholder="Weight (kg)"
         value={weight}
         onChangeText={setWeight}
         keyboardType="phone-pad"
       />
       <TextInput
         style={styles.input}
-        placeholder="Height"
+        placeholder="Height (cm)"
         value={height}
         onChangeText={setHeight}
         keyboardType="phone-pad"

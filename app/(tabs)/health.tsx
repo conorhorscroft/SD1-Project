@@ -22,6 +22,7 @@ const permissions = {
       AppleHealthKit.Constants.Permissions.StepCount,
       AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
       AppleHealthKit.Constants.Permissions.FlightsClimbed,
+      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
     ],
     // write: [AppleHealthKit.Constants.Permissions.Steps],
   },
@@ -34,6 +35,7 @@ export default function HealthScreen() {
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
   const [flights, setFlights] = useState<number>(0);
+  const [energy, setEnergy] = useState<number>(0);
 
   useEffect(() => {
     // Request HealthKit permissions
@@ -87,6 +89,26 @@ export default function HealthScreen() {
           setFlights(results.value);
         }
       );
+      AppleHealthKit.getActiveEnergyBurned(
+        {
+          startDate: new Date(2025, 0, 21).toISOString(), // Start date
+          endDate: new Date().toISOString(), // End date
+        },
+        (err, results: HealthValue[]) => {
+          if (err) {
+            console.error("Error fetching Active Energy:", err);
+            return;
+          }
+
+          // Check if the results are valid and contain energy data
+          if (results && results.length > 0 && results[0].value !== undefined) {
+            setEnergy(results[0].value);
+          } else {
+            console.log("No data found for Active Energy.");
+            setEnergy(0); // Set a default value
+          }
+        }
+      );
     } catch (error) {
       console.error("Error fetching HealthKit data:", error);
     } finally {
@@ -97,7 +119,7 @@ export default function HealthScreen() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.header}>Health</Text>
+        <Text style={styles.header}>Health Stats from Today</Text>
 
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
@@ -121,6 +143,16 @@ export default function HealthScreen() {
             <View style={styles.dataBlock}>
               <Text style={styles.label}>Flights Climbed</Text>
               <Text style={styles.value}>{flights.toString()}</Text>
+            </View>
+
+            {/* Energy Burned */}
+            <View style={styles.dataBlock}>
+              <Text style={styles.label}>Energy Burned</Text>
+              <Text style={styles.value}>
+                {energy !== undefined
+                  ? Math.round(energy).toString() + " Kcal"
+                  : "0 Kcal"}
+              </Text>
             </View>
           </>
         )}
