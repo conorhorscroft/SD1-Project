@@ -58,6 +58,10 @@ export default function HealthScreen() {
   const [flights, setFlights] = useState<number>(0);
   const [energy, setEnergy] = useState<number>(0);
   const [stepsData, setStepsData] = useState<number[]>(new Array(7).fill(0)); // Store steps for each day
+  const [chartLabels, setChartLabels] = useState<string[]>([]);
+  const [distanceData, setDistanceData] = useState<number[]>(
+    new Array(7).fill(0)
+  ); // Store distance for each day
 
   useEffect(() => {
     // Request HealthKit permissions
@@ -72,27 +76,51 @@ export default function HealthScreen() {
     });
   }, []);
 
-  const getLastSevenDays = () => {
-    const dates = [];
-    const today = new Date();
-    today.setHours(23, 59, 59, 999); // Set to end of day
+  const prepareDynamicLabelsAndData = (
+    results: Array<any>,
+    dataType: "steps" | "distance"
+  ): { labels: string[]; processedData: number[] } => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
-    for (let i = 6; i >= 0; i--) {
-      const endDate = new Date(today);
-      endDate.setDate(today.getDate() - i);
-      endDate.setHours(23, 59, 59, 999);
+    // Get the last 7 days, starting from today and going backwards
+    const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i)); // This ensures current day is the last bar
+      return d;
+    });
 
-      const startDate = new Date(endDate);
-      startDate.setHours(0, 0, 0, 0);
+    // Initialize data array
+    const weeklyData = new Array(7).fill(0);
 
-      dates.push({
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        label: startDate.toLocaleDateString("en-US", { weekday: "short" }),
-      });
-    }
+    // Process results
+    results.forEach(({ startDate, value }) => {
+      const date = new Date(startDate);
+      // Find the matching day in the last seven days
+      const matchingDayIndex = lastSevenDays.findIndex(
+        (day) =>
+          day.toISOString().split("T")[0] === date.toISOString().split("T")[0]
+      );
 
-    return dates;
+      if (matchingDayIndex !== -1) {
+        weeklyData[matchingDayIndex] +=
+          dataType === "distance" ? Number((value / 1000).toFixed(2)) : value;
+      }
+    });
+
+    // Create dynamic labels with current day last
+    const dynamicLabels = lastSevenDays.map((day) => daysOfWeek[day.getDay()]);
+
+    console.log("Processed Labels:", dynamicLabels);
+
+    return { labels: dynamicLabels, processedData: weeklyData };
   };
 
   const fetchHealthData = async () => {
@@ -157,7 +185,8 @@ export default function HealthScreen() {
         }
       );
 
-      // Fetch weekly steps
+      // Fetch daily steps
+
       const options = {
         startDate: new Date(
           new Date().setDate(new Date().getDate() - 6)
@@ -174,19 +203,31 @@ export default function HealthScreen() {
           }
           console.log("Raw step data:", results);
 
-          const weeklySteps = new Array(7).fill(0);
+          const { labels, processedData: steps } = prepareDynamicLabelsAndData(
+            results,
+            "steps"
+          );
 
-          results.forEach(({ startDate, value }) => {
-            const date = new Date(startDate); //convert ISO string to Date object
-            const dayIndex = date.getDay(); // Get day index (0 = Sunday...)
+          setChartLabels(labels);
+          setStepsData(steps);
+        }
+      );
 
-            // Shift Sunday (0) to index 6 for a Monday–Sunday format
-            const adjustedIndex = dayIndex === 0 ? 6 : dayIndex - 1;
+      // Fetch daily distance walked/ran
 
-            weeklySteps[adjustedIndex] += value; // Sum up values per day
-          });
+      AppleHealthKit.getDailyDistanceWalkingRunningSamples(
+        options,
+        (err: Object, results: Array<Object>) => {
+          if (err) {
+            console.error("Error fetching weekly distance:", err);
+            return;
+          }
+          console.log("Raw distance data:", results);
 
-          setStepsData(weeklySteps);
+          const { labels, processedData: distance } =
+            prepareDynamicLabelsAndData(results, "distance");
+
+          setDistanceData(distance);
         }
       );
     } catch (error) {
@@ -217,15 +258,18 @@ export default function HealthScreen() {
           <BarChart
             // style={graphStyle}
             data={{
-              labels: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ],
+              labels:
+                chartLabels.length > 0
+                  ? chartLabels
+                  : [
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                      "Sunday",
+                    ],
               datasets: [
                 {
                   data: stepsData,
@@ -245,25 +289,52 @@ export default function HealthScreen() {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <>
-            {/* Steps */}
-            <View style={styles.dataBlock}>
-              <Text style={styles.label}>Steps</Text>
-              <Text style={styles.value}>{steps.toString()}</Text>
-            </View>
-
             {/* Distance */}
+
+            {/* New LineChart for Distance */}
+            <View style={styles.barChart}>
+              <LineChart
+                data={{
+                  labels:
+                    chartLabels.length > 0
+                      ? chartLabels
+                      : [
+                          "Monday",
+                          "Tuesday",
+                          "Wednesday",
+                          "Thursday",
+                          "Friday",
+                          "Saturday",
+                          "Sunday",
+                        ],
+                  datasets: [
+                    {
+                      data: distanceData,
+                    },
+                  ],
+                }}
+                width={screenWidth - 20}
+                height={220}
+                yAxisLabel="km "
+                chartConfig={chartConfig}
+                verticalLabelRotation={30}
+                bezier
+              />
+              <Text style={styles.chartTitle}>Weekly Distance (km)</Text>
+            </View>
+            {/* 
             <View style={styles.dataBlock}>
               <Text style={styles.label}>Distance</Text>
               <Text style={styles.value}>
                 {(distance / 1000).toFixed(2)} km
               </Text>
-            </View>
+            </View> */}
 
             {/* Flights Climbed */}
-            <View style={styles.dataBlock}>
+            {/* <View style={styles.dataBlock}>
               <Text style={styles.label}>Flights Climbed</Text>
               <Text style={styles.value}>{flights.toString()}</Text>
-            </View>
+            </View> */}
           </>
         )}
       </View>
