@@ -42,13 +42,14 @@ const permissions = {
 
 const chartConfig = {
   backgroundGradientFrom: "#0a3d2e",
-  backgroundGradientFromOpacity: 1,
+  backgroundGradientFromOpacity: 0.5,
   backgroundGradientTo: "#2E7D32",
-  backgroundGradientToOpacity: 1,
+  backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-  strokeWidth: 4,
-  barPercentage: 0.6,
+  strokeWidth: 6,
+  barPercentage: 0.4,
   useShadowColorFromDataset: false,
+  decimalPlaces: 0,
 };
 
 export default function HealthScreen() {
@@ -80,15 +81,7 @@ export default function HealthScreen() {
     results: Array<any>,
     dataType: "steps" | "distance"
   ): { labels: string[]; processedData: number[] } => {
-    const daysOfWeek = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
+    const daysOfWeek = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
 
     // Get the last 7 days, starting from today and going backwards
     const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
@@ -245,8 +238,8 @@ export default function HealthScreen() {
             data={{ labels: ["Energy burned"], data: [energy / 2500] }}
             width={screenWidth - 40}
             height={200}
-            strokeWidth={12}
-            radius={42}
+            strokeWidth={18}
+            radius={50}
             chartConfig={chartConfig}
             hideLegend={true}
           />
@@ -254,22 +247,16 @@ export default function HealthScreen() {
             energy
           )} Kcal`}</Text>
         </View>
-        <View style={styles.barChart}>
+
+        <Text style={styles.chartTitle}>Daily Steps</Text>
+        <View style={styles.chartWrapper}>
           <BarChart
             // style={graphStyle}
             data={{
               labels:
                 chartLabels.length > 0
                   ? chartLabels
-                  : [
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                      "Sunday",
-                    ],
+                  : ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
               datasets: [
                 {
                   data: stepsData,
@@ -277,11 +264,12 @@ export default function HealthScreen() {
                 },
               ],
             }}
-            width={screenWidth - 20}
-            height={220}
+            width={screenWidth}
+            height={250}
             yAxisLabel=""
+            yAxisSuffix=""
             chartConfig={chartConfig}
-            verticalLabelRotation={30}
+            verticalLabelRotation={25}
           />
         </View>
 
@@ -291,36 +279,29 @@ export default function HealthScreen() {
           <>
             {/* Distance */}
 
+            <Text style={styles.chartTitle}>Distance Walked/Ran</Text>
+
             {/* New LineChart for Distance */}
-            <View style={styles.barChart}>
+            <View style={styles.chartWrapper}>
               <LineChart
                 data={{
                   labels:
                     chartLabels.length > 0
                       ? chartLabels
-                      : [
-                          "Monday",
-                          "Tuesday",
-                          "Wednesday",
-                          "Thursday",
-                          "Friday",
-                          "Saturday",
-                          "Sunday",
-                        ],
+                      : ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
                   datasets: [
                     {
                       data: distanceData,
                     },
                   ],
                 }}
-                width={screenWidth - 20}
-                height={220}
+                width={screenWidth}
+                height={250}
                 yAxisLabel="km "
                 chartConfig={chartConfig}
                 verticalLabelRotation={30}
                 bezier
               />
-              <Text style={styles.chartTitle}>Weekly Distance (km)</Text>
             </View>
             {/* 
             <View style={styles.dataBlock}>
@@ -398,5 +379,13 @@ const styles = StyleSheet.create({
     marginRight: 50,
     marginLeft: -80,
   },
-  barChart: {},
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFB84D",
+    textAlign: "center",
+    marginTop: 15,
+    marginBottom: 15,
+    paddingTop: 10,
+  },
 });
