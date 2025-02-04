@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -11,18 +11,9 @@ import {
 import AppleHealthKit, {
   HealthKitPermissions,
   HealthValue,
-  HealthInputOptions,
-  HealthUnit,
 } from "react-native-health";
 
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -111,7 +102,7 @@ export default function HealthScreen() {
     // Create dynamic labels with current day last
     const dynamicLabels = lastSevenDays.map((day) => daysOfWeek[day.getDay()]);
 
-    console.log("Processed Labels:", dynamicLabels);
+    // console.log("Processed Labels:", dynamicLabels);
 
     return { labels: dynamicLabels, processedData: weeklyData };
   };
@@ -194,7 +185,7 @@ export default function HealthScreen() {
             console.error("Error fetching weekly steps:", err);
             return;
           }
-          console.log("Raw step data:", results);
+          // console.log("Raw step data:", results);
 
           const { labels, processedData: steps } = prepareDynamicLabelsAndData(
             results,
@@ -215,7 +206,7 @@ export default function HealthScreen() {
             console.error("Error fetching weekly distance:", err);
             return;
           }
-          console.log("Raw distance data:", results);
+          // console.log("Raw distance data:", results);
 
           const { labels, processedData: distance } =
             prepareDynamicLabelsAndData(results, "distance");
@@ -236,7 +227,7 @@ export default function HealthScreen() {
         <View style={styles.chartWrapper}>
           <ProgressChart
             data={{ labels: ["Energy burned"], data: [energy / 2500] }}
-            width={screenWidth - 40}
+            width={screenWidth}
             height={200}
             strokeWidth={18}
             radius={50}
@@ -356,8 +347,7 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     backgroundColor: "#2E7D32",
-    padding: 10,
-    borderRadius: 20,
+    padding: 0,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -370,6 +360,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 20,
+    overflow: "hidden",
   },
   chartLabel: {
     fontSize: 18,

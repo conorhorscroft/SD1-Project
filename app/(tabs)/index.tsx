@@ -67,7 +67,7 @@ export default function HomeScreen() {
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
         <View style={styles.chartContainer}>
-          <View>
+          <View style={styles.chartContainer}>
             <ProgressChart
               data={data}
               width={screenWidth}
@@ -78,9 +78,10 @@ export default function HomeScreen() {
               hideLegend={false}
             />
           </View>
+
           <Text style={styles.chartLabel}>Progress Chart</Text>
 
-          <View>
+          <View style={styles.chartContainer}>
             <LineChart
               data={dataTwo}
               width={screenWidth}
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     padding: 0,
     justifyContent: "flex-start",
     backgroundColor: "#2E7D32",
-    borderRadius: 20,
+    borderRadius: 0,
     paddingTop: 20,
   },
   title: {

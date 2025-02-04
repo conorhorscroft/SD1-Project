@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    marginBottom: 0,
+    marginBottom: -35,
   },
   headerText: {
     fontSize: 18,
