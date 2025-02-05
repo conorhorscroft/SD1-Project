@@ -9,6 +9,7 @@ type User = {
   age: number;
   weight: number;
   height: number;
+  experience: number;
 };
 
 // Define the context type
@@ -24,6 +25,7 @@ type AuthContextType = {
     age: number;
     weight: number;
     height: number;
+    experience: number;
   }) => Promise<void>;
   logout: () => Promise<void>;
   fetchUser: () => Promise<void>;
@@ -86,6 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     age: number;
     weight: number;
     height: number;
+    experience: number;
   }) => {
     try {
       await AsyncStorage.setItem("authToken", loginResponse.token);
@@ -98,6 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           age: loginResponse.age,
           weight: loginResponse.weight,
           height: loginResponse.height,
+          experience: loginResponse.experience,
         })
       );
 
@@ -108,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         age: loginResponse.age,
         weight: loginResponse.weight,
         height: loginResponse.height,
+        experience: loginResponse.experience,
       });
       setToken(loginResponse.token);
     } catch (e) {

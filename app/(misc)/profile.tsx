@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import {
   View,
-  TextInput,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import Slider from "@react-native-community/slider";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useNavigation } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
+import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -25,15 +22,41 @@ export default function Profile() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>User Profile</Text>
-
         {/* Profile Information */}
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Name: {user?.name}</Text>
-          <Text style={styles.infoText}>Email: {user?.email}</Text>
-          <Text style={styles.infoText}>Weight: {user?.weight}kg</Text>
-          <Text style={styles.infoText}>Height: {user?.height}cm</Text>
-          <Text style={styles.infoText}>Age: {user?.age} years</Text>
+        <View style={styles.card}>
+          <Text style={styles.heading}>Profile Information</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.row}>
+              <User size={20} color="#4A90E2" />
+              <Text style={styles.label}>Name:</Text>
+              <Text style={styles.infoText}>{user?.name}</Text>
+            </View>
+            <View style={styles.row}>
+              <Mail size={20} color="#4A90E2" />
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.infoText}>{user?.email}</Text>
+            </View>
+            <View style={styles.row}>
+              <Scale size={20} color="#4A90E2" />
+              <Text style={styles.label}>Weight:</Text>
+              <Text style={styles.infoText}>{user?.weight} kg</Text>
+            </View>
+            <View style={styles.row}>
+              <Ruler size={20} color="#4A90E2" />
+              <Text style={styles.label}>Height:</Text>
+              <Text style={styles.infoText}>{user?.height} cm</Text>
+            </View>
+            <View style={styles.row}>
+              <Calendar size={20} color="#4A90E2" />
+              <Text style={styles.label}>Age:</Text>
+              <Text style={styles.infoText}>{user?.age} years</Text>
+            </View>
+            <View style={styles.row}>
+              <Star size={20} color="#4A90E2" />
+              <Text style={styles.label}>Experience:</Text>
+              <Text style={styles.infoText}>{user?.experience}</Text>
+            </View>
+          </View>
         </View>
 
         {/* Create Account Button */}
@@ -66,8 +89,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start",
-    backgroundColor: "#f5f5f5",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F8F9FA",
   },
   title: {
     fontSize: 28,
@@ -75,14 +99,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
     color: "#333",
-  },
-  infoContainer: {
-    marginBottom: 30,
-  },
-  infoText: {
-    fontSize: 18,
-    color: "#555",
-    marginVertical: 5,
   },
   button: {
     backgroundColor: "#007BFF",
@@ -96,5 +112,44 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  card: {
+    width: "90%",
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#333",
+    textAlign: "center",
+  },
+  infoContainer: {
+    marginTop: 10,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#555",
+    marginLeft: 8,
+    flex: 1,
+  },
+  infoText: {
+    fontSize: 16,
+    color: "#333",
   },
 });
