@@ -11,6 +11,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import { router } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 
 type RootStackParamList = {
   login: undefined;
@@ -27,6 +28,8 @@ export default function Login({ navigation }: LoginScreenProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const { login } = useAuth();
+
   const handleLogin = async () => {
     setLoading(true);
     setError("");
@@ -38,9 +41,11 @@ export default function Login({ navigation }: LoginScreenProps) {
       });
 
       if (response.status === 200) {
+        await login(response.data);
+
         // Store the auth token (use AsyncStorage)
-        await AsyncStorage.setItem("authToken", response.data.token);
-        alert("Logged in successfully!");
+        // await AsyncStorage.setItem("authToken", response.data.token);
+        // alert("Logged in successfully!");
         // Navigate to profile page
         router.push("/profile");
       }

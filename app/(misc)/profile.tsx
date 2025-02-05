@@ -11,15 +11,10 @@ import {
 import Slider from "@react-native-community/slider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useNavigation } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Profile() {
-  const [name, setName] = useState("Joe Bloggs");
-  const [email, setEmail] = useState("person@example.com");
-  const [phone, setPhone] = useState("123-555-6576");
-  const [weight, setWeight] = useState("80");
-  const [height, setHeight] = useState("175");
-  const [age, setAge] = useState(18); // Slider for Age
-  const [experience, setExperience] = useState(3); // Slider for Experience Level
+  const { user, logout } = useAuth();
 
   const navigation = useNavigation();
 
@@ -34,13 +29,11 @@ export default function Profile() {
 
         {/* Profile Information */}
         <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Name: {name}</Text>
-          <Text style={styles.infoText}>Email: {email}</Text>
-          <Text style={styles.infoText}>Phone: {phone}</Text>
-          <Text style={styles.infoText}>Weight: {weight}kg</Text>
-          <Text style={styles.infoText}>Height: {height}cm</Text>
-          <Text style={styles.infoText}>Age: {age} years</Text>
-          <Text style={styles.infoText}>Experience Level: {experience}</Text>
+          <Text style={styles.infoText}>Name: {user?.name}</Text>
+          <Text style={styles.infoText}>Email: {user?.email}</Text>
+          <Text style={styles.infoText}>Weight: {user?.weight}kg</Text>
+          <Text style={styles.infoText}>Height: {user?.height}cm</Text>
+          <Text style={styles.infoText}>Age: {user?.age} years</Text>
         </View>
 
         {/* Create Account Button */}
@@ -55,6 +48,10 @@ export default function Profile() {
           <Link href="/(misc)/signin">
             <Text>Sign in</Text>
           </Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={logout}>
+          <Text>Logout</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -12,6 +12,8 @@ import CustomHeader from "@/components/navigation/CustomHeader";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -32,15 +34,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          screenOptions={{ headerShown: false }}
-          name="(tabs)"
-          options={{ header: () => <CustomHeader /> }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen
+            screenOptions={{ headerShown: false }}
+            name="(tabs)"
+            options={{ header: () => <CustomHeader /> }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

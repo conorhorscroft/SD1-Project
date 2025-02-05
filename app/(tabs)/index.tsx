@@ -1,36 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
-  TextInput,
   Text,
   StyleSheet,
-  Button,
-  TouchableOpacity,
   Dimensions,
-  Platform,
-  StatusBar,
   ScrollView,
+  Alert,
 } from "react-native";
-import Slider from "@react-native-community/slider";
-import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+
+import { LineChart, ProgressChart } from "react-native-chart-kit";
+
+import { useAuth } from "@/hooks/useAuth";
+import { useFocusEffect } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
 
 const data = {
-  labels: ["Swim", "Bike", "Run"], // optional
+  labels: ["Swim", "Bike", "Run"],
   data: [0.4, 0.6, 0.8],
 };
 
@@ -40,10 +26,10 @@ const dataTwo = {
     {
       data: [20, 45, 28, 80, 99, 43],
       color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-      strokeWidth: 2, // optional
+      strokeWidth: 2,
     },
   ],
-  legend: ["Number of Workouts per week"], // optional
+  legend: ["Number of Workouts per week"],
 };
 
 const chartConfig = {
@@ -52,18 +38,25 @@ const chartConfig = {
   backgroundGradientTo: "#2E7D32",
   backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Black labels
-  strokeWidth: 3, // Slightly bolder lines for visibility
-  barPercentage: 0.7, // Slightly wider bars
+  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  strokeWidth: 3,
+  barPercentage: 0.7,
 };
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
+  const { user, fetchUser } = useAuth();
+  const [refresh, setRefresh] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUser(); // Trigger re-fresh
+    }, [])
+  );
 
   return (
-    <ScrollView>
+    <ScrollView key={refresh ? "refresh-true" : "refresh-false"}>
       <View style={styles.container}>
-        <Text style={styles.title}>Hello Conor,</Text>
+        <Text style={styles.title}>Hello {user?.name},</Text>
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
         <View style={styles.chartContainer}>
