@@ -29,16 +29,19 @@ export default function SignUp({ navigation }) {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/signup", {
-        name,
-        email,
-        phone,
-        weight,
-        height,
-        age,
-        experience,
-        password,
-      });
+      const response = await axios.post(
+        "https://sd1-backend.onrender.com/auth/signup",
+        {
+          name,
+          email,
+          phone,
+          weight,
+          height,
+          age,
+          experience,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         alert("Account created successfully!");

@@ -35,10 +35,13 @@ export default function Login({ navigation }: LoginScreenProps) {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://sd1-backend.onrender.com/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         await login(response.data);

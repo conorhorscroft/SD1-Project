@@ -29,10 +29,13 @@ export default function Login({ navigation }: LoginScreenProps) {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/verify", {
-        email,
-        verificationCode,
-      });
+      const response = await axios.post(
+        "https://sd1-backend.onrender.com/auth/verify",
+        {
+          email,
+          verificationCode,
+        }
+      );
 
       if (response.status === 200) {
         // Account verified

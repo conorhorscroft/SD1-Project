@@ -97,14 +97,14 @@ const WorkoutForm = () => {
 
     console.log(
       "Request URL:",
-      `http://localhost:8080/api/workouts/${user?.id}`
+      `https://sd1-backend.onrender.com/api/workouts/${user?.id}`
     );
     console.log("Request Data:", requestData);
     console.log("Headers:", { Authorization: `Bearer ${token}` });
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/workouts/${user?.id}`,
+        `https://sd1-backend.onrender.com/api/workouts/${user?.id}`,
         requestData,
         {
           headers: {
