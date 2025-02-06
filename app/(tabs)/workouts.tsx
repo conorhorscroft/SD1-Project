@@ -16,41 +16,21 @@ import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
 const WorkoutForm = () => {
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setRefreshKey((prev) => prev + 1);
-
-      const interval = setInterval(() => {
-        setRefreshKey((prev) => prev + 1);
-      }, 2000);
-
-      return () => clearInterval(interval);
-    }, [])
-  );
-
   const { token, user } = useAuth();
 
-  const AuthDebugDisplay = () => {
-    const [debugInfo, setDebugInfo] = useState({ token: null, userId: null });
-    const { token, user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    useEffect(() => {
-      setDebugInfo({
-        token: token,
-        userId: user?.id,
-      });
-    }, [token, user]);
+  const AuthDebugDisplay = () => {
+    const { token, user } = useAuth();
 
     return (
       <View style={styles.debugContainer}>
         <Text style={styles.debugTitle}>Debug Info:</Text>
         <ScrollView horizontal style={styles.debugScroll}>
-          <Text style={styles.debugText}>User ID: {debugInfo.userId}</Text>
+          <Text style={styles.debugText}>User ID: {user?.id}</Text>
         </ScrollView>
         <ScrollView horizontal style={styles.debugScroll}>
-          <Text style={styles.debugText}>Token: {debugInfo.token}</Text>
+          <Text style={styles.debugText}>Token: {token}</Text>
         </ScrollView>
       </View>
     );
@@ -86,6 +66,8 @@ const WorkoutForm = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     const requestData = {
       exerciseName: formData.exerciseName,
       date: formData.date.toISOString().split("T")[0],
@@ -95,6 +77,7 @@ const WorkoutForm = () => {
       distance: parseFloat(formData.distance),
     };
 
+    // debugging
     console.log(
       "Request URL:",
       `https://sd1-backend.onrender.com/api/workouts/${user?.id}`
@@ -124,10 +107,15 @@ const WorkoutForm = () => {
         distance: "0",
       });
 
-      alert("Workout saved successfully!");
+      if (response.status === 201) {
+        // Successfully saved
+        alert("Workout saved successfully!");
+      }
     } catch (error) {
       console.error("Error saving workout:", error);
       alert("Error saving workout. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -153,7 +141,7 @@ const WorkoutForm = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Add Workout</Text>
-      <AuthDebugDisplay key={refreshKey} />
+      <AuthDebugDisplay />
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Exercise</Text>
         <TouchableOpacity
@@ -252,13 +240,16 @@ const WorkoutForm = () => {
       </View>
 
       <TouchableOpacity
-        style={styles.submitButton}
-        onPress={() => {
-          console.log("Button Pressed");
-          handleSubmit();
-        }}
+        style={[
+          styles.submitButton,
+          isSubmitting && styles.submitButtonDisabled,
+        ]}
+        onPress={handleSubmit}
+        disabled={isSubmitting}
       >
-        <Text style={styles.submitButtonText}>Save Workout</Text>
+        <Text style={styles.submitButtonText}>
+          {isSubmitting ? "Saving..." : "Save Workout"}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -363,6 +354,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  submitButtonDisabled: {
+    backgroundColor: "#7fb5ff", // Lighter blue when disabled
+    opacity: 0.7,
   },
   debugContainer: {
     marginBottom: 20,
