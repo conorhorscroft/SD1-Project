@@ -28,7 +28,7 @@ export default function MiscLayout() {
             headerBackTitle: "Home",
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="signin"
           options={{
             headerShown: false,
@@ -45,7 +45,7 @@ export default function MiscLayout() {
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
       </Stack>
     </>
   );

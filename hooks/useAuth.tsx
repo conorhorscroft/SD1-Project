@@ -79,6 +79,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     bootstrapAsync();
   }, []);
 
+  if (isLoading) {
+    return null;
+  }
+
   // Add token update function
   const updateToken = async (newToken: string) => {
     try {

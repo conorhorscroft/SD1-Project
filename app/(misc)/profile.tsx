@@ -6,9 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Link, useNavigation } from "expo-router";
+import { Link, router, useNavigation, useRouter } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -24,7 +25,15 @@ export default function Profile() {
       <View style={styles.container}>
         {/* Profile Information */}
         <View style={styles.card}>
-          <Text style={styles.heading}>Profile Information</Text>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.homebutton}
+              onPress={() => router.replace("/(tabs)")}
+            >
+              <Icon name="home" size={30} color="#000" />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Profile Information</Text>
+          </View>
           <View style={styles.infoContainer}>
             <View style={styles.row}>
               <User size={20} color="#4A90E2" />
@@ -59,23 +68,33 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* Create Account Button */}
-        <TouchableOpacity style={styles.button}>
-          <Link href="/(misc)/signup">
-            <Text>Create an Account</Text>
-          </Link>
-        </TouchableOpacity>
+        {/* <View style={styles.buttonrow}>
+          
+          <TouchableOpacity style={styles.button}>
+            <Link href="/signup">
+              <Text>Create an Account</Text>
+            </Link>
+          </TouchableOpacity>
 
-        {/* Sign-in Button */}
-        <TouchableOpacity style={styles.button}>
-          <Link href="/(misc)/signin">
-            <Text>Sign in</Text>
-          </Link>
-        </TouchableOpacity>
+         
+          <TouchableOpacity style={styles.button}>
+            <Link href="/signin">
+              <Text>Sign in</Text>
+            </Link>
+          </TouchableOpacity>
+        </View> */}
 
-        <TouchableOpacity style={styles.button} onPress={logout}>
-          <Text>Logout</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonrow}>
+          <TouchableOpacity style={styles.button}>
+            <Link href="/updateprofile">
+              <Text>Update Profile Details</Text>
+            </Link>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={logout}>
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -107,6 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     marginTop: 20,
+    marginRight: 20,
   },
   buttonText: {
     color: "#fff",
@@ -130,6 +150,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "#333",
     textAlign: "center",
+    marginLeft: 10,
   },
   infoContainer: {
     marginTop: 10,
@@ -138,6 +159,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  buttonrow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
@@ -151,5 +180,15 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
     color: "#333",
+  },
+  homebutton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#000",
+    borderRadius: 8,
+    padding: 2,
+    marginBottom: 15,
+    marginRight: 10,
   },
 });
