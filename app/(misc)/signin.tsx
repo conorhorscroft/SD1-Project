@@ -50,7 +50,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         // await AsyncStorage.setItem("authToken", response.data.token);
         // alert("Logged in successfully!");
         // Navigate to profile page
-        router.push("/profile");
+        router.replace("/(tabs)");
       }
     } catch (err) {
       setError("Invalid credentials. Please try again.");
