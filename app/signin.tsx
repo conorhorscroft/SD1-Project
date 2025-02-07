@@ -6,6 +6,7 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -69,6 +70,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -78,11 +80,24 @@ export default function Login({ navigation }: LoginScreenProps) {
         secureTextEntry
       />
 
-      <Button
-        title={loading ? "Logging In..." : "Log In"}
+      <TouchableOpacity
+        style={styles.button}
         onPress={handleLogin}
         disabled={loading}
-      />
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Logging In..." : "Log In"}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/signup")}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
@@ -99,4 +114,16 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
+  button: {
+    backgroundColor: "#007BFF",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "white",
+  },
 });

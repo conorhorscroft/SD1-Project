@@ -21,6 +21,19 @@ export default function SignUp({ navigation }) {
 
   // function to handle POST request for account creation
   const handleSave = async () => {
+    if (
+      !name ||
+      !email ||
+      !phone ||
+      !weight ||
+      !height ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError("All fields are required!");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
@@ -136,6 +149,7 @@ export default function SignUp({ navigation }) {
         onPress={handleSave}
         disabled={loading}
       />
+      <Button title="Back to Sign in" onPress={() => router.push("/signin")} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
