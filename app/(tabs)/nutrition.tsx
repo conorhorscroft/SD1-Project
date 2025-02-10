@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { PieChart } from "react-native-chart-kit";
 
 export default function NutritionScreen() {
   const [foodTitle, setFoodTitle] = useState("");
@@ -42,6 +43,33 @@ export default function NutritionScreen() {
       setError("Failed to fetch data. Please try again later.");
     }
   };
+
+  const pieChartData = nutritionData
+    ? [
+        {
+          name: "Protein",
+          population: nutritionData.protein.value,
+          color: "#FF6384",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 15,
+        },
+        {
+          name: "Carbs",
+          population: nutritionData.carbs.value,
+          color: "#36A2EB",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 15,
+        },
+        {
+          name: "Fat",
+          population: nutritionData.fat.value,
+          color: "#FFCE56",
+          legendFontColor: "#7F7F7F",
+          legendFontSize: 15,
+        },
+      ]
+    : [];
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -81,6 +109,31 @@ export default function NutritionScreen() {
               </Text>
             </View>
           ) : null}
+
+          {/* Display Pie Chart if nutritionData is available */}
+          {nutritionData && (
+            <View style={styles.chartContainer}>
+              <Text style={styles.chartTitle}>Nutritional Breakdown</Text>
+              <PieChart
+                data={pieChartData}
+                width={300} // width
+                height={220} // height
+                chartConfig={{
+                  backgroundColor: "#e26a00",
+                  backgroundGradientFrom: "#ff6600",
+                  backgroundGradientTo: "#ff6600",
+                  decimalPlaces: 2,
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
+                  },
+                }}
+                accessor="population" // Maps the value to the chart
+                backgroundColor="transparent"
+                paddingLeft="15"
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -124,5 +177,14 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 10,
     fontSize: 16,
+  },
+  chartContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  chartTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
