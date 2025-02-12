@@ -6,11 +6,13 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 import { router } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 
 type RootStackParamList = {
   login: undefined;
@@ -27,22 +29,29 @@ export default function Login({ navigation }: LoginScreenProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const { login } = useAuth();
+
   const handleLogin = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://sd1-backend.onrender.com/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
+        await login(response.data);
+
         // Store the auth token (use AsyncStorage)
-        await AsyncStorage.setItem("authToken", response.data.token);
-        alert("Logged in successfully!");
+        // await AsyncStorage.setItem("authToken", response.data.token);
+        // alert("Logged in successfully!");
         // Navigate to profile page
-        router.push("/profile");
+        router.replace("/(tabs)");
       }
     } catch (err) {
       setError("Invalid credentials. Please try again.");
@@ -61,6 +70,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -70,11 +80,24 @@ export default function Login({ navigation }: LoginScreenProps) {
         secureTextEntry
       />
 
-      <Button
-        title={loading ? "Logging In..." : "Log In"}
+      <TouchableOpacity
+        style={styles.button}
         onPress={handleLogin}
         disabled={loading}
-      />
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Logging In..." : "Log In"}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/signup")}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
@@ -91,4 +114,16 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
+  button: {
+    backgroundColor: "#007BFF",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "white",
+  },
 });

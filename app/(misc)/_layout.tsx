@@ -1,8 +1,9 @@
-import React from "react";
-import { Stack, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { Stack, useNavigation, useRouter } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function MiscLayout() {
   const colorScheme = useColorScheme();
@@ -17,6 +18,17 @@ export default function MiscLayout() {
     });
   }, [navigation]);
 
+  const { token, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !token) {
+      router.replace("/signin");
+    }
+  }, [isLoading, token, router]);
+
+  if (isLoading || !token) return null;
+
   return (
     <>
       <Stack>
@@ -28,7 +40,7 @@ export default function MiscLayout() {
             headerBackTitle: "Home",
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="signin"
           options={{
             headerShown: false,
@@ -45,7 +57,7 @@ export default function MiscLayout() {
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
       </Stack>
     </>
   );

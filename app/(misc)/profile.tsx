@@ -1,25 +1,18 @@
 import React, { useState } from "react";
 import {
   View,
-  TextInput,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import Slider from "@react-native-community/slider";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, useNavigation } from "expo-router";
+import { Link, router, useNavigation, useRouter } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
+import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Profile() {
-  const [name, setName] = useState("Joe Bloggs");
-  const [email, setEmail] = useState("person@example.com");
-  const [phone, setPhone] = useState("123-555-6576");
-  const [weight, setWeight] = useState("80");
-  const [height, setHeight] = useState("175");
-  const [age, setAge] = useState(18); // Slider for Age
-  const [experience, setExperience] = useState(3); // Slider for Experience Level
+  const { user, logout } = useAuth();
 
   const navigation = useNavigation();
 
@@ -30,32 +23,78 @@ export default function Profile() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>User Profile</Text>
-
         {/* Profile Information */}
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Name: {name}</Text>
-          <Text style={styles.infoText}>Email: {email}</Text>
-          <Text style={styles.infoText}>Phone: {phone}</Text>
-          <Text style={styles.infoText}>Weight: {weight}kg</Text>
-          <Text style={styles.infoText}>Height: {height}cm</Text>
-          <Text style={styles.infoText}>Age: {age} years</Text>
-          <Text style={styles.infoText}>Experience Level: {experience}</Text>
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.homebutton}
+              onPress={() => router.replace("/(tabs)")}
+            >
+              <Icon name="home" size={30} color="#000" />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Profile Information</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.row}>
+              <User size={20} color="#4A90E2" />
+              <Text style={styles.label}>Name:</Text>
+              <Text style={styles.infoText}>{user?.name}</Text>
+            </View>
+            <View style={styles.row}>
+              <Mail size={20} color="#4A90E2" />
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.infoText}>{user?.email}</Text>
+            </View>
+            <View style={styles.row}>
+              <Scale size={20} color="#4A90E2" />
+              <Text style={styles.label}>Weight:</Text>
+              <Text style={styles.infoText}>{user?.weight} kg</Text>
+            </View>
+            <View style={styles.row}>
+              <Ruler size={20} color="#4A90E2" />
+              <Text style={styles.label}>Height:</Text>
+              <Text style={styles.infoText}>{user?.height} cm</Text>
+            </View>
+            <View style={styles.row}>
+              <Calendar size={20} color="#4A90E2" />
+              <Text style={styles.label}>Age:</Text>
+              <Text style={styles.infoText}>{user?.age} years</Text>
+            </View>
+            <View style={styles.row}>
+              <Star size={20} color="#4A90E2" />
+              <Text style={styles.label}>Experience:</Text>
+              <Text style={styles.infoText}>{user?.experience}</Text>
+            </View>
+          </View>
         </View>
 
-        {/* Create Account Button */}
-        <TouchableOpacity style={styles.button}>
-          <Link href="/(misc)/signup">
-            <Text>Create an Account</Text>
-          </Link>
-        </TouchableOpacity>
+        {/* <View style={styles.buttonrow}>
+          
+          <TouchableOpacity style={styles.button}>
+            <Link href="/signup">
+              <Text>Create an Account</Text>
+            </Link>
+          </TouchableOpacity>
 
-        {/* Sign-in Button */}
-        <TouchableOpacity style={styles.button}>
-          <Link href="/(misc)/signin">
-            <Text>Sign in</Text>
-          </Link>
-        </TouchableOpacity>
+         
+          <TouchableOpacity style={styles.button}>
+            <Link href="/signin">
+              <Text>Sign in</Text>
+            </Link>
+          </TouchableOpacity>
+        </View> */}
+
+        <View style={styles.buttonrow}>
+          <TouchableOpacity style={styles.button}>
+            <Link href="/updateprofile">
+              <Text>Update Profile Details</Text>
+            </Link>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={logout}>
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -69,8 +108,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start",
-    backgroundColor: "#f5f5f5",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F8F9FA",
   },
   title: {
     fontSize: 28,
@@ -79,14 +119,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#333",
   },
-  infoContainer: {
-    marginBottom: 30,
-  },
-  infoText: {
-    fontSize: 18,
-    color: "#555",
-    marginVertical: 5,
-  },
   button: {
     backgroundColor: "#007BFF",
     paddingVertical: 12,
@@ -94,10 +126,69 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     marginTop: 20,
+    marginRight: 20,
   },
   buttonText: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  card: {
+    width: "90%",
+    padding: 20,
+    borderRadius: 12,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#333",
+    textAlign: "center",
+    marginLeft: 10,
+  },
+  infoContainer: {
+    marginTop: 10,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  buttonrow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#555",
+    marginLeft: 8,
+    flex: 1,
+  },
+  infoText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  homebutton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#000",
+    borderRadius: 8,
+    padding: 2,
+    marginBottom: 15,
+    marginRight: 10,
   },
 });

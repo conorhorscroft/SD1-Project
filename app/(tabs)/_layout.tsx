@@ -1,13 +1,21 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, Tabs, useRouter } from "expo-router";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+
+import { useAuth } from "@/hooks/useAuth";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { token, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !token) {
+      router.replace("/signin");
+    }
+  }, [isLoading, token, router]);
+
+  if (isLoading || !token) return null;
 
   return (
     <Tabs

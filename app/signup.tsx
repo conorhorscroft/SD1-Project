@@ -21,6 +21,19 @@ export default function SignUp({ navigation }) {
 
   // function to handle POST request for account creation
   const handleSave = async () => {
+    if (
+      !name ||
+      !email ||
+      !phone ||
+      !weight ||
+      !height ||
+      !password ||
+      !confirmPassword
+    ) {
+      setError("All fields are required!");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
@@ -29,16 +42,19 @@ export default function SignUp({ navigation }) {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/signup", {
-        name,
-        email,
-        phone,
-        weight,
-        height,
-        age,
-        experience,
-        password,
-      });
+      const response = await axios.post(
+        "https://sd1-backend.onrender.com/auth/signup",
+        {
+          name,
+          email,
+          phone,
+          weight,
+          height,
+          age,
+          experience,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         alert("Account created successfully!");
@@ -133,6 +149,7 @@ export default function SignUp({ navigation }) {
         onPress={handleSave}
         disabled={loading}
       />
+      <Button title="Back to Sign in" onPress={() => router.push("/signin")} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
