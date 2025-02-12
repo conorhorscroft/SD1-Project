@@ -7,6 +7,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Dimensions,
+  TextInput,
+  Button,
 } from "react-native";
 import AppleHealthKit, {
   HealthKitPermissions,
@@ -14,6 +16,8 @@ import AppleHealthKit, {
 } from "react-native-health";
 
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
+
+import { useHealthAdvice } from "@/hooks/useHealthAdvice";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -54,6 +58,28 @@ export default function HealthScreen() {
   const [distanceData, setDistanceData] = useState<number[]>(
     new Array(7).fill(0)
   ); // Store distance for each day
+
+  // getAdvice
+  const { getAdvice } = useHealthAdvice();
+
+  const [concernOrGoal, setConcernOrGoal] = useState("");
+  const [advice, setAdvice] = useState<string | null>(null);
+  const [disclaimer, setDisclaimer] = useState<string | null>(null);
+
+  const fetchAdvice = async () => {
+    if (!concernOrGoal.trim()) return;
+
+    setLoading(true);
+    try {
+      const response = await getAdvice(concernOrGoal);
+      setAdvice(response.advice);
+      setDisclaimer(response.disclaimer);
+    } catch (error) {
+      setAdvice("Failed to fetch advice. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Request HealthKit permissions
@@ -223,6 +249,51 @@ export default function HealthScreen() {
 
   return (
     <ScrollView>
+      <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+        Health & Wellness Advice
+      </Text>
+      <Text style={{ marginTop: 10 }}>
+        Enter a health concern or goal to get advice:
+      </Text>
+
+      <TextInput
+        style={{
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderRadius: 8,
+          padding: 10,
+          marginVertical: 10,
+        }}
+        placeholder="e.g., weight loss, muscle gain, better sleep..."
+        value={concernOrGoal}
+        onChangeText={setConcernOrGoal}
+      />
+
+      <Button title="Get Advice" onPress={fetchAdvice} disabled={loading} />
+
+      {loading && <Text style={{ marginTop: 10 }}>Loading...</Text>}
+
+      {advice && (
+        <View
+          style={{
+            marginTop: 20,
+            padding: 10,
+            backgroundColor: "#f0f0f0",
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ fontWeight: "bold" }}>Advice:</Text>
+          <Text>{advice}</Text>
+        </View>
+      )}
+
+      {disclaimer && (
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ fontStyle: "italic", color: "gray" }}>
+            {disclaimer}
+          </Text>
+        </View>
+      )}
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <ProgressChart
