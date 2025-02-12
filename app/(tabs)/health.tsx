@@ -19,6 +19,8 @@ import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 
 import { useHealthAdvice } from "@/hooks/useHealthAdvice";
 
+import Markdown from "react-native-markdown-display";
+
 const screenWidth = Dimensions.get("window").width;
 
 /* Permission options */
@@ -67,13 +69,19 @@ export default function HealthScreen() {
   const [disclaimer, setDisclaimer] = useState<string | null>(null);
 
   const fetchAdvice = async () => {
-    if (!concernOrGoal.trim()) return;
+    if (!concernOrGoal.trim()) {
+      alert("Please enter some text.");
+      return;
+    }
 
     setLoading(true);
     try {
       const response = await getAdvice(concernOrGoal);
+      // console.log(response.advice);
       setAdvice(response.advice);
       setDisclaimer(response.disclaimer);
+
+      // console.log(disclaimer);
     } catch (error) {
       setAdvice("Failed to fetch advice. Please try again.");
     } finally {
@@ -247,6 +255,8 @@ export default function HealthScreen() {
     }
   };
 
+  const formattedAdvice = advice;
+
   return (
     <ScrollView>
       <Text style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -283,7 +293,7 @@ export default function HealthScreen() {
           }}
         >
           <Text style={{ fontWeight: "bold" }}>Advice:</Text>
-          <Text>{advice}</Text>
+          <Markdown>{advice}</Markdown>
         </View>
       )}
 

@@ -81,7 +81,7 @@ export class HealthAdvisor {
 
             They are seeking advice about: ${concernOrGoal}
 
-            Provide practical, general wellness suggestions. Format the response in JSON with these fields:
+            Provide practical, general wellness suggestions. Format the response as a valid JSON String that I can parse with Javascript having these fields:
             - advice: containing specific, actionable recommendations
             - disclaimer: appropriate medical disclaimers
 
@@ -93,16 +93,23 @@ export class HealthAdvisor {
       // API call and response handling
       const result = await this.model.generateContent(prompt);
       const response = result.response;
-      const text = response.text();
+      let text = response.text(); // returns a string formatted like JSON
+      text = text
+        .replace(/^```json/, "")
+        .replace(/```$/, "")
+        .trim();
+      console.log("Text prior to parsing: ", text);
 
       // Parse the JSON response
       try {
         const jsonResponse = JSON.parse(text);
+        console.log("JSON Response:", jsonResponse);
         return {
           advice: jsonResponse.advice,
           disclaimer: jsonResponse.disclaimer,
         };
       } catch (parseError) {
+        console.log("Unable to parse JSON");
         // If JSON parsing fails, return the raw text with a default disclaimer
         return {
           advice: text,
