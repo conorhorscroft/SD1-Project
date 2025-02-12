@@ -121,7 +121,10 @@ export function useHealthAdvice() {
   const { user } = useAuth();
 
   const getAdvice = async (concernOrGoal: string) => {
-    const API_KEY = "AIzaSyBdgpEy7nL0568gxSpugPVQ9M7HngWljp0";
+    const API_KEY = process.env.EXPO_PUBLIC_GOOGLE_AI_API_KEY;
+    if (!API_KEY) {
+      throw new Error("API key is missing");
+    }
     const advisor = new HealthAdvisor(API_KEY);
 
     try {
