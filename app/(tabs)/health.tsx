@@ -7,6 +7,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Dimensions,
+  Button,
+  TextInput,
 } from "react-native";
 import AppleHealthKit, {
   HealthKitPermissions,
@@ -15,12 +17,7 @@ import AppleHealthKit, {
 
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 
-import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from "@google/generative-ai";
-import { env } from "../../constants/config";
+import { useHealthAdvice } from "@/hooks/useHealthAdvice";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -61,6 +58,28 @@ export default function HealthScreen() {
   const [distanceData, setDistanceData] = useState<number[]>(
     new Array(7).fill(0)
   ); // Store distance for each day
+
+  // getAdvice
+  const { getAdvice } = useHealthAdvice();
+
+  const [concernOrGoal, setConcernOrGoal] = useState("");
+  const [advice, setAdvice] = useState<string | null>(null);
+  const [disclaimer, setDisclaimer] = useState<string | null>(null);
+
+  const fetchAdvice = async () => {
+    if (!concernOrGoal.trim()) return;
+
+    setLoading(true);
+    try {
+      const response = await getAdvice(concernOrGoal);
+      setAdvice(response.advice);
+      setDisclaimer(response.disclaimer);
+    } catch (error) {
+      setAdvice("Failed to fetch advice. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Request HealthKit permissions
@@ -228,105 +247,53 @@ export default function HealthScreen() {
     }
   };
 
-  // Define interface for API response
-  interface HealthAdviceResponse {
-    advice: string;
-    disclaimer: string;
-  }
-
-  // Define Class to handle AI interactions
-  export class HealthAdvisor {
-    private genAI: GoogleGenerativeAI;
-    private model: any;
-
-    // Takes API key to initialise Gemini
-    constructor(apiKey: string) {
-      this.genAI = new GoogleGenerativeAI(apiKey);
-      this.model = this.genAI.getGenerativeModel({
-        // best text model
-        model: "gemini-pro",
-        // safety settings to prevent inappropriate conten
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-          },
-        ],
-      });
-    }
-
-    // takes users profile and specific health topic they want advice on
-    async generateAdvice(
-      profile: UserProfile,
-      concernOrGoal: string
-      // returns our health advice response interface
-    ): Promise<HealthAdviceResponse> {
-      try {
-        // Create a structured prompt
-        const prompt = `As a wellness guide, provide general lifestyle and wellness advice for a ${
-          profile.age
-        } year old person with the following profile:
-            
-            ${profile.lifestyle ? `- Lifestyle: ${profile.lifestyle}` : ""}
-            ${
-              profile.fitnessLevel
-                ? `- Fitness Level: ${profile.fitnessLevel}`
-                : ""
-            }
-            ${
-              profile.healthGoals?.length
-                ? `- Health Goals: ${profile.healthGoals.join(", ")}`
-                : ""
-            }
-            
-            They are seeking advice about: ${concernOrGoal}
-            
-            Provide practical, general wellness suggestions. Format the response in JSON with these fields:
-            - advice: containing specific, actionable recommendations
-            - disclaimer: appropriate medical disclaimers
-            
-            Keep suggestions general and emphasize consulting healthcare professionals for medical concerns.`;
-
-        const result = await this.model.generateContent(prompt);
-        const response = result.response;
-        const text = response.text();
-
-        // Parse the JSON response
-        try {
-          const jsonResponse = JSON.parse(text);
-          return {
-            advice: jsonResponse.advice,
-            disclaimer: jsonResponse.disclaimer,
-          };
-        } catch (parseError) {
-          // If JSON parsing fails, return the raw text with a default disclaimer
-          return {
-            advice: text,
-            disclaimer:
-              "This is general wellness information and not medical advice. Always consult healthcare professionals for medical concerns.",
-          };
-        }
-      } catch (error) {
-        console.error("Error generating health advice:", error);
-        throw new Error("Failed to generate health advice");
-      }
-    }
-  }
-
   return (
     <ScrollView>
+      <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+        Health & Wellness Advice
+      </Text>
+      <Text style={{ marginTop: 10 }}>
+        Enter a health concern or goal to get advice:
+      </Text>
+
+      <TextInput
+        style={{
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderRadius: 8,
+          padding: 10,
+          marginVertical: 10,
+        }}
+        placeholder="e.g., weight loss, muscle gain, better sleep..."
+        value={concernOrGoal}
+        onChangeText={setConcernOrGoal}
+      />
+
+      <Button title="Get Advice" onPress={fetchAdvice} disabled={loading} />
+
+      {loading && <Text style={{ marginTop: 10 }}>Loading...</Text>}
+
+      {advice && (
+        <View
+          style={{
+            marginTop: 20,
+            padding: 10,
+            backgroundColor: "#f0f0f0",
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ fontWeight: "bold" }}>Advice:</Text>
+          <Text>{advice}</Text>
+        </View>
+      )}
+
+      {disclaimer && (
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ fontStyle: "italic", color: "gray" }}>
+            {disclaimer}
+          </Text>
+        </View>
+      )}
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <ProgressChart
