@@ -16,10 +16,13 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@google/generative-ai": "^0.21.0",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-community/slider": "^4.5.5",
     "@react-navigation/native": "^6.0.2",
+    "@types/node": "^22.13.1",
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "expo": "^52.0.23",
     "expo-constants": "~17.0.3",
     "expo-dev-client": "~5.0.9",
@@ -31,6 +34,7 @@
     "expo-system-ui": "~4.0.6",
     "expo-web-browser": "~14.0.1",
     "nativewind": "^4.1.23",
+    "openai": "^4.84.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.5",
@@ -43,7 +47,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.1",
     "react-native-web": "~0.19.10",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -56,5 +61,17 @@
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
-  "private": true
+  "private": true,
+  "description": "This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conorhorscroft/SD1-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/conorhorscroft/SD1-Project/issues"
+  },
+  "homepage": "https://github.com/conorhorscroft/SD1-Project#readme"
 }

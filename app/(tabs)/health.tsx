@@ -15,6 +15,13 @@ import AppleHealthKit, {
 
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 
+import {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} from "@google/generative-ai";
+import { env } from "../../constants/config";
+
 const screenWidth = Dimensions.get("window").width;
 
 /* Permission options */
@@ -220,6 +227,103 @@ export default function HealthScreen() {
       setLoading(false);
     }
   };
+
+  // Define interface for API response
+  interface HealthAdviceResponse {
+    advice: string;
+    disclaimer: string;
+  }
+
+  // Define Class to handle AI interactions
+  export class HealthAdvisor {
+    private genAI: GoogleGenerativeAI;
+    private model: any;
+
+    // Takes API key to initialise Gemini
+    constructor(apiKey: string) {
+      this.genAI = new GoogleGenerativeAI(apiKey);
+      this.model = this.genAI.getGenerativeModel({
+        // best text model
+        model: "gemini-pro",
+        // safety settings to prevent inappropriate conten
+        safetySettings: [
+          {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+          },
+        ],
+      });
+    }
+
+    // takes users profile and specific health topic they want advice on
+    async generateAdvice(
+      profile: UserProfile,
+      concernOrGoal: string
+      // returns our health advice response interface
+    ): Promise<HealthAdviceResponse> {
+      try {
+        // Create a structured prompt
+        const prompt = `As a wellness guide, provide general lifestyle and wellness advice for a ${
+          profile.age
+        } year old person with the following profile:
+            
+            ${profile.lifestyle ? `- Lifestyle: ${profile.lifestyle}` : ""}
+            ${
+              profile.fitnessLevel
+                ? `- Fitness Level: ${profile.fitnessLevel}`
+                : ""
+            }
+            ${
+              profile.healthGoals?.length
+                ? `- Health Goals: ${profile.healthGoals.join(", ")}`
+                : ""
+            }
+            
+            They are seeking advice about: ${concernOrGoal}
+            
+            Provide practical, general wellness suggestions. Format the response in JSON with these fields:
+            - advice: containing specific, actionable recommendations
+            - disclaimer: appropriate medical disclaimers
+            
+            Keep suggestions general and emphasize consulting healthcare professionals for medical concerns.`;
+
+        const result = await this.model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
+
+        // Parse the JSON response
+        try {
+          const jsonResponse = JSON.parse(text);
+          return {
+            advice: jsonResponse.advice,
+            disclaimer: jsonResponse.disclaimer,
+          };
+        } catch (parseError) {
+          // If JSON parsing fails, return the raw text with a default disclaimer
+          return {
+            advice: text,
+            disclaimer:
+              "This is general wellness information and not medical advice. Always consult healthcare professionals for medical concerns.",
+          };
+        }
+      } catch (error) {
+        console.error("Error generating health advice:", error);
+        throw new Error("Failed to generate health advice");
+      }
+    }
+  }
 
   return (
     <ScrollView>
