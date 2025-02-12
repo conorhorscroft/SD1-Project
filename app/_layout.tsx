@@ -4,6 +4,7 @@ import CustomHeader from "@/components/navigation/CustomHeader";
 
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ActivityIndicator, View } from "react-native";
+import React from "react";
 
 function RootLayoutContent() {
   const { isLoading } = useAuth();
