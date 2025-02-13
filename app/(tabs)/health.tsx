@@ -7,8 +7,13 @@ import {
   ScrollView,
   ActivityIndicator,
   Dimensions,
+<<<<<<< HEAD
   Button,
   TextInput,
+=======
+  TextInput,
+  Button,
+>>>>>>> main_current
 } from "react-native";
 import AppleHealthKit, {
   HealthKitPermissions,
@@ -19,6 +24,11 @@ import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 
 import { useHealthAdvice } from "@/hooks/useHealthAdvice";
 
+<<<<<<< HEAD
+=======
+import Markdown from "react-native-markdown-display";
+
+>>>>>>> main_current
 const screenWidth = Dimensions.get("window").width;
 
 /* Permission options */
@@ -67,13 +77,28 @@ export default function HealthScreen() {
   const [disclaimer, setDisclaimer] = useState<string | null>(null);
 
   const fetchAdvice = async () => {
+<<<<<<< HEAD
     if (!concernOrGoal.trim()) return;
+=======
+    if (!concernOrGoal.trim()) {
+      alert("Please enter some text.");
+      return;
+    }
+>>>>>>> main_current
 
     setLoading(true);
     try {
       const response = await getAdvice(concernOrGoal);
+<<<<<<< HEAD
       setAdvice(response.advice);
       setDisclaimer(response.disclaimer);
+=======
+      // console.log(response.advice);
+      setAdvice(response.advice);
+      setDisclaimer(response.disclaimer);
+
+      // console.log(disclaimer);
+>>>>>>> main_current
     } catch (error) {
       setAdvice("Failed to fetch advice. Please try again.");
     } finally {
@@ -247,6 +272,8 @@ export default function HealthScreen() {
     }
   };
 
+  const formattedAdvice = advice;
+
   return (
     <ScrollView>
       <Text style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -283,7 +310,11 @@ export default function HealthScreen() {
           }}
         >
           <Text style={{ fontWeight: "bold" }}>Advice:</Text>
+<<<<<<< HEAD
           <Text>{advice}</Text>
+=======
+          <Markdown>{advice}</Markdown>
+>>>>>>> main_current
         </View>
       )}
 

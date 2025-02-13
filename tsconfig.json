@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": ["react-native-dotenv"],
     "strict": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "@/*": ["./*"]
     }
