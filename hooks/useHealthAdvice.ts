@@ -3,19 +3,12 @@ import {
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
-<<<<<<< HEAD
-import { env } from "../constants/config";
 import { useAuth } from "@/hooks/useAuth";
-import { GOOGLE_AI_API_KEY } from "@env";
-=======
-import { useAuth } from "@/hooks/useAuth";
-// import { GOOGLE_AI_API_KEY } from "@env";
->>>>>>> main_current
 
 // Define interface for API response
 interface HealthAdviceResponse {
   advice: string;
-  disclaimer: string;
+  // disclaimer: string;
 }
 
 // Define Class to handle AI interactions
@@ -29,11 +22,7 @@ export class HealthAdvisor {
     this.model = this.genAI.getGenerativeModel({
       // best text model
       model: "gemini-pro",
-<<<<<<< HEAD
-      // safety settings to prevent inappropriate conten
-=======
       // safety settings to prevent inappropriate content
->>>>>>> main_current
       safetySettings: [
         {
           category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -76,40 +65,27 @@ export class HealthAdvisor {
           ((user.height / 100) * (user.height / 100))
         ).toFixed(1);
       }
-      const prompt = `As a wellness guide, provide general lifestyle and wellness advice for a person with the following profile:
+      const prompt = `As a wellness guide, provide brief general lifestyle and wellness advice for a person with the following profile:
 
-<<<<<<< HEAD
-=======
-        // pull data from context
->>>>>>> main_current
-        ${user.age ? `- Age: ${user.age} years` : ""}
-        ${user.weight ? `- Weight: ${user.weight} kg` : ""}
-        ${user.height ? `- Height: ${user.height} cm` : ""}
-        ${bmi ? `- BMI: ${bmi}` : ""}
-        ${
-          user.experience
-            ? `- Fitness Experience Level out of 10: ${user.experience}`
-            : ""
-        }
+  ${user.age ? `- Age: ${user.age} years` : ""}
+  ${user.weight ? `- Weight: ${user.weight} kg` : ""}
+  ${user.height ? `- Height: ${user.height} cm` : ""}
+  ${bmi ? `- BMI: ${bmi}` : ""}
+  ${
+    user.experience
+      ? `- Fitness Experience Level out of 10: ${user.experience}`
+      : ""
+  }
 
-            They are seeking advice about: ${concernOrGoal}
+  They are seeking advice about: ${concernOrGoal}
 
-<<<<<<< HEAD
-            Provide practical, general wellness suggestions. Format the response in JSON with these fields:
-=======
-            Provide practical, general wellness suggestions. Format the response as a valid JSON String that I can parse with Javascript having these fields:
->>>>>>> main_current
-            - advice: containing specific, actionable recommendations
-            - disclaimer: appropriate medical disclaimers
+ Please provide your response in markdown format with the following structure:
+1. Start with main recommendations organized under clear headings using **bold** text
+2. Use bullet points (-) for individual recommendations
+3. End with a disclaimer section
 
-            Keep suggestions general and emphasize consulting healthcare professionals for medical concerns.`;
+Keep the advice specific and actionable.`;
 
-<<<<<<< HEAD
-      // API call and response handling
-      const result = await this.model.generateContent(prompt);
-      const response = result.response;
-      const text = response.text();
-=======
       // debug - verify prompt
       console.log(prompt);
 
@@ -117,36 +93,29 @@ export class HealthAdvisor {
       const result = await this.model.generateContent(prompt);
       const response = result.response;
       let text = response.text(); // returns a string formatted like JSON
-      text = text
-        .replace(/^```json/, "")
-        .replace(/```$/, "")
-        .trim();
-      console.log("Text prior to parsing: ", text);
->>>>>>> main_current
+      // text = text
+      //   .replace(/^```json/, "")
+      //   .replace(/```$/, "")
+      //   .trim();
+      // console.log("Text prior to parsing: ", text);
 
-      // Parse the JSON response
-      try {
-        const jsonResponse = JSON.parse(text);
-<<<<<<< HEAD
-=======
-        console.log("JSON Response:", jsonResponse);
->>>>>>> main_current
-        return {
-          advice: jsonResponse.advice,
-          disclaimer: jsonResponse.disclaimer,
-        };
-      } catch (parseError) {
-<<<<<<< HEAD
-=======
-        console.log("Unable to parse JSON");
->>>>>>> main_current
-        // If JSON parsing fails, return the raw text with a default disclaimer
-        return {
-          advice: text,
-          disclaimer:
-            "This is general wellness information and not medical advice. Always consult healthcare professionals for medical concerns.",
-        };
-      }
+      // // Parse the JSON response
+      // try {
+      //   const jsonResponse = JSON.parse(text);
+      //   console.log("JSON Response:", jsonResponse);
+      //   return {
+      //     advice: jsonResponse.advice,
+      //     disclaimer: jsonResponse.disclaimer,
+      //   };
+      // } catch (parseError) {
+      //   console.log("Unable to parse JSON");
+      //   // If JSON parsing fails, return the raw text with a default disclaimer
+      return {
+        advice:
+          text +
+          "\n\nThis is general wellness information and not medical advice. Always consult healthcare professionals for medical concerns.",
+      };
+      // }
     } catch (error) {
       console.error("Error generating health advice:", error);
       throw new Error("Failed to generate health advice");
@@ -156,12 +125,6 @@ export class HealthAdvisor {
 
 export function useHealthAdvice() {
   const { user } = useAuth();
-<<<<<<< HEAD
-  const advisor = new HealthAdvisor(GOOGLE_AI_API_KEY);
-
-  const getAdvice = async (concernOrGoal: string) => {
-    const advisor = new HealthAdvisor(process.env.GOOGLE_AI_API_KEY || "");
-=======
 
   const getAdvice = async (concernOrGoal: string) => {
     const API_KEY = process.env.EXPO_PUBLIC_GOOGLE_AI_API_KEY;
@@ -169,7 +132,6 @@ export function useHealthAdvice() {
       throw new Error("API key is missing");
     }
     const advisor = new HealthAdvisor(API_KEY);
->>>>>>> main_current
 
     try {
       const advice = await advisor.generateAdvice(

@@ -1,11 +1,4 @@
 module.exports = function (api) {
-<<<<<<< HEAD
-  api.cache(true);
-
-  return {
-    presets: ["module:metro-react-native-babel-preset", "babel-preset-expo"],
-    plugins: [["module:react-native-dotenv"]],
-=======
   api.cache(false);
   return {
     presets: ["babel-preset-expo"],
@@ -18,6 +11,5 @@ module.exports = function (api) {
         },
       ],
     ],
->>>>>>> main_current
   };
 };
