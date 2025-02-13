@@ -1,149 +1,172 @@
-// import AppleHealthKit, {
-//   HealthInputOptions,
-//   HealthKitPermissions,
-// } from "react-native-health";
-// import { useEffect, useState } from "react";
-// import { Platform } from "react-native";
+import { useState, useEffect } from "react";
+import AppleHealthKit, {
+  HealthKitPermissions,
+  HealthValue,
+} from "react-native-health";
 
-// import {
-//   initialize,
-//   requestPermission,
-//   readRecords,
-// } from "react-native-health-connect";
-// import { TimeRangeFilter } from "react-native-health-connect/lib/typescript/types/base.types";
+const PERMISSIONS = {
+  permissions: {
+    read: [
+      AppleHealthKit.Constants.Permissions.HeartRate,
+      AppleHealthKit.Constants.Permissions.StepCount,
+      AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+      AppleHealthKit.Constants.Permissions.FlightsClimbed,
+      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+    ],
+  },
+} as HealthKitPermissions;
 
-// const permissions: HealthKitPermissions = {
-//   permissions: {
-//     read: [
-//       AppleHealthKit.Constants.Permissions.Steps,
-//       AppleHealthKit.Constants.Permissions.FlightsClimbed,
-//       AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
-//     ],
-//     write: [],
-//   },
-// };
+interface HealthData {
+  loading: boolean;
+  steps: number;
+  distance: number;
+  flights: number;
+  energy: number;
+  stepsData: number[];
+  chartLabels: string[];
+  distanceData: number[];
+  refreshData: () => Promise<void>;
+}
 
-// const useHealthData = (date: Date) => {
-//   const [hasPermissions, setHasPermission] = useState(false);
-//   const [steps, setSteps] = useState(0);
-//   const [flights, setFlights] = useState(0);
-//   const [distance, setDistance] = useState(0);
+function useHealthData(): HealthData {
+  const [loading, setLoading] = useState(true);
+  const [steps, setSteps] = useState<number>(0);
+  const [distance, setDistance] = useState<number>(0);
+  const [flights, setFlights] = useState<number>(0);
+  const [energy, setEnergy] = useState<number>(0);
+  const [stepsData, setStepsData] = useState<number[]>(new Array(7).fill(0));
+  const [chartLabels, setChartLabels] = useState<string[]>([]);
+  const [distanceData, setDistanceData] = useState<number[]>(
+    new Array(7).fill(0)
+  );
 
-//   // iOS - HealthKit
-//   useEffect(() => {
-//     if (Platform.OS !== "ios") {
-//       return;
-//     }
+  const prepareDynamicLabelsAndData = (
+    results: Array<any>,
+    dataType: "steps" | "distance"
+  ) => {
+    const daysOfWeek = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
+    const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      return d;
+    });
 
-//     AppleHealthKit.isAvailable((err, isAvailable) => {
-//       if (err) {
-//         console.log("Error checking availability");
-//         return;
-//       }
-//       if (!isAvailable) {
-//         console.log("Apple Health not available");
-//         return;
-//       }
-//       AppleHealthKit.initHealthKit(permissions, (err) => {
-//         if (err) {
-//           console.log("Error getting permissions");
-//           return;
-//         }
-//         setHasPermission(true);
-//       });
-//     });
-//   }, []);
+    const weeklyData = new Array(7).fill(0);
 
-//   useEffect(() => {
-//     if (!hasPermissions) {
-//       return;
-//     }
+    results.forEach(({ startDate, value }) => {
+      const date = new Date(startDate);
+      const matchingDayIndex = lastSevenDays.findIndex(
+        (day) =>
+          day.toISOString().split("T")[0] === date.toISOString().split("T")[0]
+      );
 
-//     const options: HealthInputOptions = {
-//       date: date.toISOString(),
-//       includeManuallyAdded: false,
-//     };
+      if (matchingDayIndex !== -1) {
+        weeklyData[matchingDayIndex] +=
+          dataType === "distance" ? Number((value / 1000).toFixed(2)) : value;
+      }
+    });
 
-//     AppleHealthKit.getStepCount(options, (err, results) => {
-//       if (err) {
-//         console.log("Error getting the steps");
-//         return;
-//       }
-//       setSteps(results.value);
-//     });
+    const dynamicLabels = lastSevenDays.map((day) => daysOfWeek[day.getDay()]);
+    return { labels: dynamicLabels, processedData: weeklyData };
+  };
 
-//     AppleHealthKit.getFlightsClimbed(options, (err, results) => {
-//       if (err) {
-//         console.log("Error getting the steps:", err);
-//         return;
-//       }
-//       setFlights(results.value);
-//     });
+  const fetchHealthData = async () => {
+    try {
+      setLoading(true);
 
-//     AppleHealthKit.getDistanceWalkingRunning(options, (err, results) => {
-//       if (err) {
-//         console.log("Error getting the steps:", err);
-//         return;
-//       }
-//       setDistance(results.value);
-//     });
-//   }, [hasPermissions, date]);
+      // Fetch current day's data
+      AppleHealthKit.getStepCount(
+        { date: new Date().toISOString() },
+        (err, results: HealthValue) => {
+          if (!err) setSteps(results.value);
+        }
+      );
 
-//   // Android - Health Connect
-//   const readSampleData = async () => {
-//     // initialize the client
-//     const isInitialized = await initialize();
-//     if (!isInitialized) {
-//       return;
-//     }
+      AppleHealthKit.getDistanceWalkingRunning(
+        { date: new Date().toISOString() },
+        (err, results: HealthValue) => {
+          if (!err) setDistance(results.value);
+        }
+      );
 
-//     // request permissions
-//     await requestPermission([
-//       { accessType: "read", recordType: "Steps" },
-//       { accessType: "read", recordType: "Distance" },
-//       { accessType: "read", recordType: "FloorsClimbed" },
-//     ]);
+      AppleHealthKit.getFlightsClimbed(
+        { date: new Date().toISOString() },
+        (err, results: HealthValue) => {
+          if (!err) setFlights(results.value);
+        }
+      );
 
-//     const timeRangeFilter: TimeRangeFilter = {
-//       operator: "between",
-//       startTime: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
-//       endTime: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
-//     };
+      // Fetch weekly data
+      const options = {
+        startDate: new Date(
+          new Date().setDate(new Date().getDate() - 6)
+        ).toISOString(),
+        endDate: new Date().toISOString(),
+      };
 
-//     // Steps
-//     const steps = await readRecords("Steps", { timeRangeFilter });
-//     const totalSteps = steps.reduce((sum, cur) => sum + cur.count, 0);
-//     setSteps(totalSteps);
+      AppleHealthKit.getDailyStepCountSamples(
+        options,
+        (err: Object, results: Array<Object>) => {
+          if (!err) {
+            const { labels, processedData } = prepareDynamicLabelsAndData(
+              results,
+              "steps"
+            );
+            setChartLabels(labels);
+            setStepsData(processedData);
+          }
+        }
+      );
 
-//     // Distance
-//     const distance = await readRecords("Distance", { timeRangeFilter });
-//     const totalDistance = distance.reduce(
-//       (sum, cur) => sum + cur.distance.inMeters,
-//       0
-//     );
-//     setDistance(totalDistance);
+      AppleHealthKit.getDailyDistanceWalkingRunningSamples(
+        options,
+        (err: Object, results: Array<Object>) => {
+          if (!err) {
+            const { processedData } = prepareDynamicLabelsAndData(
+              results,
+              "distance"
+            );
+            setDistanceData(processedData);
+          }
+        }
+      );
 
-//     // Floors climbed
-//     const floorsClimbed = await readRecords("FloorsClimbed", {
-//       timeRangeFilter,
-//     });
-//     const totalFloors = floorsClimbed.reduce((sum, cur) => sum + cur.floors, 0);
-//     setFlights(totalFloors);
-//     // console.log(floorsClimbed);
-//   };
+      // Fetch energy data
+      AppleHealthKit.getActiveEnergyBurned(
+        {
+          startDate: new Date(2025, 0, 21).toISOString(),
+          endDate: new Date().toISOString(),
+        },
+        (err, results: HealthValue[]) => {
+          if (!err && results?.length > 0) {
+            setEnergy(results[0].value);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching HealthKit data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   useEffect(() => {
-//     if (Platform.OS !== "android") {
-//       return;
-//     }
-//     readSampleData();
-//   }, [date]);
+  useEffect(() => {
+    AppleHealthKit.initHealthKit(PERMISSIONS, (err) => {
+      if (!err) fetchHealthData();
+    });
+  }, []);
 
-//   return {
-//     steps,
-//     flights,
-//     distance,
-//   };
-// };
+  return {
+    loading,
+    steps,
+    distance,
+    flights,
+    energy,
+    stepsData,
+    chartLabels,
+    distanceData,
+    refreshData: fetchHealthData,
+  };
+}
 
-// export default useHealthData;
+export default useHealthData;
