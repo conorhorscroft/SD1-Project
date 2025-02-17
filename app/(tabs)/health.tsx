@@ -1,8 +1,17 @@
-import React from "react";
-import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 import useHealthData from "@/hooks/useHealthData";
 import { HealthAdviceSection } from "@/components/HealthAdviceSection";
+import { WebView } from "react-native-webview";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -21,11 +30,43 @@ const chartConfig = {
 export default function HealthScreen() {
   const { loading, energy, stepsData, chartLabels, distanceData } =
     useHealthData();
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setIsVisible((prevState) => !prevState);
+  };
 
   return (
     <ScrollView style={styles.container}>
       <HealthAdviceSection />
 
+      <TouchableOpacity
+        style={styles.button}
+        onPress={toggleVisibility}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading
+            ? "Loading..."
+            : "Feeling Stressed?\n Tap to Reveal a Breathing Exercise!"}
+        </Text>
+      </TouchableOpacity>
+
+      {isVisible && (
+        <View style={styles.exerciseSection}>
+          <Text style={styles.title}>Guided Breathing Exercise</Text>
+          <Text style={styles.subtitle}>Follow the animation to relax</Text>
+
+          <View style={styles.webviewContainer}>
+            <WebView
+              source={{ uri: "https://www.calm.com/breathe" }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              style={styles.webview}
+            />
+          </View>
+        </View>
+      )}
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <ProgressChart
@@ -114,5 +155,46 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 15,
     marginBottom: 15,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#FFB84D",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#FFB84D",
+    marginBottom: 20,
+  },
+  webviewContainer: {
+    width: "100%",
+    height: 380,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  webview: {
+    flex: 1,
+    marginBottom: -80,
+  },
+  exerciseSection: {
+    width: "100%",
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "rgb(27, 94, 30)",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 15,
+    width: "95%",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  buttonText: {
+    color: "#FFB84D",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
