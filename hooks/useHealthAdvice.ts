@@ -80,9 +80,10 @@ export class HealthAdvisor {
   They are seeking advice about: ${concernOrGoal}
 
  Please provide your response in markdown format with the following structure:
-1. Start with main recommendations organized under clear headings using **bold** text
-2. Use bullet points (-) for individual recommendations
-3. End with a disclaimer section
+1. Make reference to the details provided for the user profile
+2. Start with main recommendations organized under clear headings using **bold** text
+3. Use bullet points (-) for individual recommendations
+4. End with a disclaimer section
 
 Keep the advice specific and actionable.`;
 

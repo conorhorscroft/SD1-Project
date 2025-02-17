@@ -50,7 +50,7 @@ export const HealthAdviceSection = () => {
       </Text>
       <TextInput
         style={styles.input}
-        placeholder="e.g., weight loss, muscle gain, better sleep..."
+        placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
         value={concernOrGoal}
         onChangeText={setConcernOrGoal}
         placeholderTextColor="#FFB84D"
