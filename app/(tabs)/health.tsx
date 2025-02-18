@@ -48,6 +48,8 @@ export default function HealthScreen() {
         <Text style={styles.buttonText}>
           {loading
             ? "Loading..."
+            : isVisible
+            ? "Press to close breathing exercise"
             : "Feeling Stressed?\n Tap to Reveal a Breathing Exercise!"}
         </Text>
       </TouchableOpacity>
