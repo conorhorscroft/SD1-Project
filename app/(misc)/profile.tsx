@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Link, router, useNavigation, useRouter } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -67,22 +67,6 @@ export default function Profile() {
             </View>
           </View>
         </View>
-
-        {/* <View style={styles.buttonrow}>
-          
-          <TouchableOpacity style={styles.button}>
-            <Link href="/signup">
-              <Text>Create an Account</Text>
-            </Link>
-          </TouchableOpacity>
-
-         
-          <TouchableOpacity style={styles.button}>
-            <Link href="/signin">
-              <Text>Sign in</Text>
-            </Link>
-          </TouchableOpacity>
-        </View> */}
 
         <View style={styles.buttonrow}>
           <TouchableOpacity style={styles.button}>

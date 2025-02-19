@@ -40,24 +40,14 @@ export default function MiscLayout() {
             headerBackTitle: "Home",
           }}
         />
-        {/* <Stack.Screen
-          name="signin"
+        <Stack.Screen
+          name="updateprofile"
           options={{
             headerShown: false,
+            title: "Profile",
+            headerBackTitle: "Home",
           }}
         />
-        <Stack.Screen
-          name="signup"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="verify"
-          options={{
-            headerShown: false,
-          }}
-        /> */}
       </Stack>
     </>
   );
