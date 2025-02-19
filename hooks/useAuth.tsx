@@ -30,6 +30,9 @@ type LoginResponse = {
   experience: number;
 };
 
+// update user data type
+type UpdateUserData = Omit<User, "id">;
+
 // Define the context type
 type AuthContextType = {
   user: User | null;
@@ -39,6 +42,7 @@ type AuthContextType = {
   fetchUser: () => Promise<void>;
   isLoading: boolean;
   updateToken: (newToken: string) => Promise<void>;
+  updateUser: (userData: UpdateUserData) => Promise<void>;
 };
 
 // Create the context with a more explicit type
@@ -50,6 +54,7 @@ const AuthContext = createContext<AuthContextType>({
   fetchUser: async () => {},
   isLoading: true,
   updateToken: async () => {},
+  updateUser: async () => {},
 });
 
 // Authentication Provider Component
@@ -140,6 +145,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUser = async (userData: UpdateUserData) => {
+    try {
+      if (!user || !token) throw new Error("No user logged in");
+
+      const response = await fetch(
+        `https://sd1-backend.onrender.com/api/user/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update user");
+      }
+
+      const updatedUser = await response.json();
+
+      // Create the complete user object
+      const completeUserData: User = {
+        ...updatedUser,
+        id: user.id, // Ensure we keep the existing user ID
+      };
+
+      // Update local storage
+      await AsyncStorage.setItem("userData", JSON.stringify(completeUserData));
+
+      // Update state
+      setUser(completeUserData);
+    } catch (e) {
+      console.error("Failed to update user data", e);
+      throw e;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -150,6 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUser,
         isLoading,
         updateToken,
+        updateUser,
       }}
     >
       {children}
