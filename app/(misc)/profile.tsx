@@ -8,7 +8,15 @@ import {
 } from "react-native";
 import { Link, router, useNavigation } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
-import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
+import {
+  User,
+  Mail,
+  Scale,
+  Ruler,
+  Calendar,
+  Star,
+  Phone,
+} from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Profile() {
@@ -44,6 +52,11 @@ export default function Profile() {
               <Mail size={20} color="#4A90E2" />
               <Text style={styles.label}>Email:</Text>
               <Text style={styles.infoText}>{user?.email}</Text>
+            </View>
+            <View style={styles.row}>
+              <Phone size={20} color="#4A90E2" />
+              <Text style={styles.label}>Phone:</Text>
+              <Text style={styles.infoText}>{user?.phone}</Text>
             </View>
             <View style={styles.row}>
               <Scale size={20} color="#4A90E2" />

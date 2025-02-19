@@ -12,6 +12,7 @@ type User = {
   id: number;
   email: string;
   name: string;
+  phone: string;
   age: number;
   weight: number;
   height: number;
@@ -23,6 +24,7 @@ type LoginResponse = {
   expiresIn: number;
   userId: number;
   email: string;
+  phone: string;
   name: string;
   age: number;
   weight: number;
@@ -118,6 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userData: User = {
         id: loginResponse.userId,
         email: loginResponse.email,
+        phone: loginResponse.phone,
         name: loginResponse.name,
         age: loginResponse.age,
         weight: loginResponse.weight,

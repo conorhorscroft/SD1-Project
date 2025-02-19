@@ -10,7 +10,15 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
-import { User, Mail, Scale, Ruler, Calendar, Star } from "lucide-react-native";
+import {
+  User,
+  Mail,
+  Scale,
+  Ruler,
+  Calendar,
+  Star,
+  Phone,
+} from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Slider from "@react-native-community/slider";
 
@@ -20,6 +28,7 @@ export default function UpdateProfile() {
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
+    phone: user?.phone || "",
     weight: user?.weight?.toString() || "",
     height: user?.height?.toString() || "",
     age: user?.age?.toString() || "",
@@ -103,6 +112,19 @@ export default function UpdateProfile() {
                 }
                 placeholder="Enter your email"
                 keyboardType="email-address"
+              />
+            </View>
+
+            <View style={styles.inputRow}>
+              <Phone size={20} color="#4A90E2" />
+              <Text style={styles.label}>Phone:</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.phone}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, phone: text })
+                }
+                placeholder="Enter your phone number"
               />
             </View>
 
