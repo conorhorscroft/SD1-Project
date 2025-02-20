@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, StyleSheet, Button } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Button,
+  ScrollView,
+} from "react-native";
 import Slider from "@react-native-community/slider";
-import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { useRouter } from "expo-router";
 
@@ -14,6 +20,10 @@ export default function SignUp({ navigation }) {
   const [height, setHeight] = useState("");
   const [age, setAge] = useState(18); // Slider for Age
   const [experience, setExperience] = useState(1); // Slider for Experience Level
+  const [strength, setStrength] = useState(1); // Slider for Strength Level
+  const [endurance, setEndurance] = useState(1); // Slider for Endurance Level
+  const [weightLoss, setWeightLoss] = useState(1); // Slider for Weight Loss Level
+  const [health, setHealth] = useState(1); // Slider for Health Level
   const [password, setPassword] = useState(""); // Password field
   const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password field
   const [loading, setLoading] = useState(false); // Correctly initializing loading state
@@ -68,7 +78,7 @@ export default function SignUp({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Create User Profile</Text>
 
       <TextInput
@@ -128,6 +138,49 @@ export default function SignUp({ navigation }) {
         onValueChange={(value) => setExperience(value)}
       />
 
+      <Text>Set Your Goals Here!</Text>
+      <Text>(Don't worry, these can be changed later)</Text>
+
+      <Text>Endurance</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={experience}
+        onValueChange={(value) => setExperience(value)}
+      />
+
+      <Text>Strength</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={experience}
+        onValueChange={(value) => setExperience(value)}
+      />
+
+      <Text>Weight Loss</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={experience}
+        onValueChange={(value) => setExperience(value)}
+      />
+
+      <Text>Health</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={10}
+        step={1}
+        value={experience}
+        onValueChange={(value) => setExperience(value)}
+      />
+
       {/* Password Fields */}
       <TextInput
         style={styles.input}
@@ -151,7 +204,7 @@ export default function SignUp({ navigation }) {
       />
       <Button title="Back to Sign in" onPress={() => router.push("/signin")} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+    </ScrollView>
   );
 }
 
