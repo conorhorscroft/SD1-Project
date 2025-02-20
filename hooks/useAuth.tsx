@@ -17,6 +17,11 @@ type User = {
   weight: number;
   height: number;
   experience: number;
+  strength: number;
+  endurance: number;
+  weightLoss: number;
+  health: number;
+  hoursAvailable: number;
 };
 
 type LoginResponse = {
@@ -30,6 +35,11 @@ type LoginResponse = {
   weight: number;
   height: number;
   experience: number;
+  strength: number;
+  endurance: number;
+  weightLoss: number;
+  health: number;
+  hoursAvailable: number;
 };
 
 // update user data type
@@ -126,6 +136,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         weight: loginResponse.weight,
         height: loginResponse.height,
         experience: loginResponse.experience,
+        strength: loginResponse.strength,
+        endurance: loginResponse.endurance,
+        weightLoss: loginResponse.weightLoss,
+        health: loginResponse.health,
+        hoursAvailable: loginResponse.hoursAvailable,
       };
 
       await AsyncStorage.setItem("userData", JSON.stringify(userData));

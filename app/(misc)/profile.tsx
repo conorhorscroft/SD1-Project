@@ -16,6 +16,11 @@ import {
   Calendar,
   Star,
   Phone,
+  BicepsFlexed,
+  Bike,
+  Weight,
+  HeartPulse,
+  Hourglass,
 } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -77,6 +82,31 @@ export default function Profile() {
               <Star size={20} color="#4A90E2" />
               <Text style={styles.label}>Experience:</Text>
               <Text style={styles.infoText}>{user?.experience}</Text>
+            </View>
+            <View style={styles.row}>
+              <BicepsFlexed size={20} color="#4A90E2" />
+              <Text style={styles.label}>Strength Goal:</Text>
+              <Text style={styles.infoText}>{user?.strength}</Text>
+            </View>
+            <View style={styles.row}>
+              <Bike size={20} color="#4A90E2" />
+              <Text style={styles.label}>Endurance Goal:</Text>
+              <Text style={styles.infoText}>{user?.endurance}</Text>
+            </View>
+            <View style={styles.row}>
+              <Weight size={20} color="#4A90E2" />
+              <Text style={styles.label}>Weight Loss Goal:</Text>
+              <Text style={styles.infoText}>{user?.weightLoss}</Text>
+            </View>
+            <View style={styles.row}>
+              <HeartPulse size={20} color="#4A90E2" />
+              <Text style={styles.label}>Health Goal:</Text>
+              <Text style={styles.infoText}>{user?.health}</Text>
+            </View>
+            <View style={styles.row}>
+              <Hourglass size={20} color="#4A90E2" />
+              <Text style={styles.label}>Hours per week Goal:</Text>
+              <Text style={styles.infoText}>{user?.hoursAvailable}</Text>
             </View>
           </View>
         </View>

@@ -18,6 +18,11 @@ import {
   Calendar,
   Star,
   Phone,
+  BicepsFlexed,
+  Bike,
+  Weight,
+  HeartPulse,
+  Hourglass,
 } from "lucide-react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Slider from "@react-native-community/slider";
@@ -33,6 +38,11 @@ export default function UpdateProfile() {
     height: user?.height?.toString() || "",
     age: user?.age?.toString() || "",
     experience: user?.experience || 0,
+    strength: user?.strength || 0,
+    endurance: user?.endurance || 0,
+    weightLoss: user?.weightLoss || 0,
+    health: user?.health || 0,
+    hoursAvailable: user?.hoursAvailable || 0,
   });
 
   const handleUpdate = async () => {
@@ -55,6 +65,7 @@ export default function UpdateProfile() {
                 weight: parseFloat(formData.weight),
                 height: parseFloat(formData.height),
                 experience: formData.experience,
+                strength: formData.strength,
               };
 
               await updateUser(updatedData);
@@ -195,6 +206,135 @@ export default function UpdateProfile() {
               <View style={styles.sliderLabels}>
                 <Text style={styles.sliderLabel}>Beginner</Text>
                 <Text style={styles.sliderLabel}>Expert</Text>
+              </View>
+            </View>
+
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderHeader}>
+                <BicepsFlexed size={20} color="#4A90E2" />
+                <Text style={styles.label}>Strength Goal:</Text>
+                <Text style={styles.experienceValue}>{formData.strength}</Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={10}
+                step={1}
+                value={formData.strength}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, strength: value })
+                }
+                minimumTrackTintColor="#4A90E2"
+                maximumTrackTintColor="#ddd"
+                thumbTintColor="#4A90E2"
+              />
+              <View style={styles.sliderLabels}>
+                <Text style={styles.sliderLabel}>Beginner</Text>
+                <Text style={styles.sliderLabel}>Expert</Text>
+              </View>
+            </View>
+
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderHeader}>
+                <Bike size={20} color="#4A90E2" />
+                <Text style={styles.label}>Endurance Goal:</Text>
+                <Text style={styles.experienceValue}>{formData.endurance}</Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={10}
+                step={1}
+                value={formData.endurance}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, endurance: value })
+                }
+                minimumTrackTintColor="#4A90E2"
+                maximumTrackTintColor="#ddd"
+                thumbTintColor="#4A90E2"
+              />
+              <View style={styles.sliderLabels}>
+                <Text style={styles.sliderLabel}>Beginner</Text>
+                <Text style={styles.sliderLabel}>Expert</Text>
+              </View>
+            </View>
+
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderHeader}>
+                <Weight size={20} color="#4A90E2" />
+                <Text style={styles.label}>Weight Loss Goal:</Text>
+                <Text style={styles.experienceValue}>
+                  {formData.weightLoss}
+                </Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={10}
+                step={1}
+                value={formData.weightLoss}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, weightLoss: value })
+                }
+                minimumTrackTintColor="#4A90E2"
+                maximumTrackTintColor="#ddd"
+                thumbTintColor="#4A90E2"
+              />
+              <View style={styles.sliderLabels}>
+                <Text style={styles.sliderLabel}>Beginner</Text>
+                <Text style={styles.sliderLabel}>Expert</Text>
+              </View>
+            </View>
+
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderHeader}>
+                <HeartPulse size={20} color="#4A90E2" />
+                <Text style={styles.label}>Health Goal:</Text>
+                <Text style={styles.experienceValue}>{formData.health}</Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={10}
+                step={1}
+                value={formData.health}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, health: value })
+                }
+                minimumTrackTintColor="#4A90E2"
+                maximumTrackTintColor="#ddd"
+                thumbTintColor="#4A90E2"
+              />
+              <View style={styles.sliderLabels}>
+                <Text style={styles.sliderLabel}>Beginner</Text>
+                <Text style={styles.sliderLabel}>Expert</Text>
+              </View>
+            </View>
+
+            <View style={styles.sliderContainer}>
+              <View style={styles.sliderHeader}>
+                <Hourglass size={20} color="#4A90E2" />
+                <Text style={styles.label}>Hours Per Week Available:</Text>
+                <Text style={styles.experienceValue}>
+                  {formData.hoursAvailable}
+                </Text>
+              </View>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={20}
+                step={0.5}
+                value={formData.hoursAvailable}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, hoursAvailable: value })
+                }
+                minimumTrackTintColor="#4A90E2"
+                maximumTrackTintColor="#ddd"
+                thumbTintColor="#4A90E2"
+              />
+              <View style={styles.sliderLabels}>
+                <Text style={styles.sliderLabel}>Less</Text>
+                <Text style={styles.sliderLabel}>More</Text>
               </View>
             </View>
           </View>

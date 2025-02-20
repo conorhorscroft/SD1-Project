@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
 import { NavigationProp } from "@react-navigation/native";
 import { router } from "expo-router";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 type RootStackParamList = {
   login: undefined;
@@ -54,6 +62,12 @@ export default function Login({ navigation }: LoginScreenProps) {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.homebutton}
+        onPress={() => router.replace("/(tabs)")}
+      >
+        <Icon name="home" size={30} color="#000" />
+      </TouchableOpacity>
       <Text style={styles.title}>Verify Email</Text>
 
       <TextInput
@@ -62,6 +76,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -91,4 +106,14 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
+  homebutton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#000",
+    borderRadius: 8,
+    padding: 2,
+    marginBottom: 15,
+    marginRight: 10,
+  },
 });
