@@ -57,10 +57,8 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Hello {user?.name},</Text>
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
-
         <View style={styles.chartContainer}>
           <GoalsRadarChart />
-
           <View style={styles.chartContainer}>
             <ProgressChart
               data={data}
