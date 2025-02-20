@@ -52,6 +52,10 @@ export class HealthAdvisor {
       weight?: number;
       height?: number;
       experience?: number;
+      strength?: number;
+      endurance?: number;
+      weightLoss?: number;
+      health?: number;
     },
     concernOrGoal: string
     // returns our health advice response interface
@@ -76,11 +80,12 @@ export class HealthAdvisor {
       ? `- Fitness Experience Level out of 10: ${user.experience}`
       : ""
   }
+  ${` - Their respective goals for these categories out of 10 are as follows; Strength: ${user.health}, Endurance: ${user.endurance}, Weight Loss: ${user.weightLoss}, General Health: ${user.health}`}
 
   They are seeking advice about: ${concernOrGoal}
 
  Please provide your response in markdown format with the following structure:
-1. Make reference to the details provided for the user profile
+1. Make general reference to the details provided for the user profile (don't mention specific numbers)
 2. Start with main recommendations organized under clear headings using **bold** text
 3. Use bullet points (-) for individual recommendations
 4. End with a disclaimer section
@@ -142,6 +147,10 @@ export function useHealthAdvice() {
           weight: user?.weight,
           height: user?.height,
           experience: user?.experience,
+          strength: user?.strength,
+          endurance: user?.endurance,
+          weightLoss: user?.weightLoss,
+          health: user?.health,
         },
         concernOrGoal
       );
