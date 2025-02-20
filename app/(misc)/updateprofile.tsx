@@ -229,8 +229,8 @@ export default function UpdateProfile() {
                 thumbTintColor="#4A90E2"
               />
               <View style={styles.sliderLabels}>
-                <Text style={styles.sliderLabel}>Beginner</Text>
-                <Text style={styles.sliderLabel}>Expert</Text>
+                <Text style={styles.sliderLabel}>Not so Important</Text>
+                <Text style={styles.sliderLabel}>Very Important</Text>
               </View>
             </View>
 
@@ -254,8 +254,8 @@ export default function UpdateProfile() {
                 thumbTintColor="#4A90E2"
               />
               <View style={styles.sliderLabels}>
-                <Text style={styles.sliderLabel}>Beginner</Text>
-                <Text style={styles.sliderLabel}>Expert</Text>
+                <Text style={styles.sliderLabel}>Not so Important</Text>
+                <Text style={styles.sliderLabel}>Very Important</Text>
               </View>
             </View>
 
@@ -281,8 +281,8 @@ export default function UpdateProfile() {
                 thumbTintColor="#4A90E2"
               />
               <View style={styles.sliderLabels}>
-                <Text style={styles.sliderLabel}>Beginner</Text>
-                <Text style={styles.sliderLabel}>Expert</Text>
+                <Text style={styles.sliderLabel}>Not so Important</Text>
+                <Text style={styles.sliderLabel}>Very Important</Text>
               </View>
             </View>
 
@@ -306,8 +306,8 @@ export default function UpdateProfile() {
                 thumbTintColor="#4A90E2"
               />
               <View style={styles.sliderLabels}>
-                <Text style={styles.sliderLabel}>Beginner</Text>
-                <Text style={styles.sliderLabel}>Expert</Text>
+                <Text style={styles.sliderLabel}>Not so Important</Text>
+                <Text style={styles.sliderLabel}>Very Important</Text>
               </View>
             </View>
 

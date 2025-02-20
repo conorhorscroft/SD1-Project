@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { View, Text, StyleSheet } from "react-native";
 import { RadarChart } from "@salmonco/react-native-radar-chart";
+import { LinearGradient } from "expo-linear-gradient";
 
 const GoalsRadarChart = () => {
   const { user, fetchUser } = useAuth();
@@ -20,51 +21,60 @@ const GoalsRadarChart = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Your Fitness Goals</Text>
-      <RadarChart
-        data={data}
-        maxValue={10}
-        gradientColor={{
-          startColor: "#FFB84D",
-          endColor: "#FF9F42",
-          count: 5,
-        }}
-        stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
-        strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
-        strokeOpacity={[1, 1, 1, 1, 0.13]}
-        labelColor="#FFB84D"
-        dataFillColor="#FF9F42"
-        dataFillOpacity={0.8}
-        dataStroke="#FFB84D"
-        dataStrokeWidth={2}
-        isCircle
-      />
-    </View>
+    <LinearGradient
+      colors={["#0a3d2e", "#2E7D32"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+        <RadarChart
+          data={data}
+          maxValue={10}
+          gradientColor={{
+            startColor: "#0a3d2e",
+            endColor: "#2E7D32",
+            count: 5,
+          }}
+          stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
+          strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
+          strokeOpacity={[1, 1, 1, 1, 0.13]}
+          labelColor="#FFB84D"
+          labelSize={12}
+          labelDistance={1.18}
+          dataFillColor="#FF9F42"
+          dataFillOpacity={0.5}
+          dataStroke="#FFB84D"
+          dataStrokeWidth={2}
+          isCircle
+        />
+        <Text style={styles.title}>Your Fitness Goals</Text>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#2E7D32",
-    padding: 25,
-    borderRadius: 25,
+    // backgroundColor: "#1B6033",
+    padding: 0,
+    borderRadius: 20,
     shadowColor: "#0a3d2e",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.9,
     shadowRadius: 15,
     elevation: 10,
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    width: "90%",
+    marginTop: 15,
+    marginBottom: 15,
+    width: "100%",
     alignSelf: "center",
+    alignItems: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     textAlign: "left",
-    marginBottom: 15,
+    marginTop: 15,
     color: "#FFB84D",
     letterSpacing: 0.5,
   },
