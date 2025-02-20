@@ -7,11 +7,10 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-
 import { LineChart, ProgressChart } from "react-native-chart-kit";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useFocusEffect } from "@react-navigation/native";
+import GoalsRadarChart from "@/components/GoalsRadarChart";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -60,6 +59,8 @@ export default function HomeScreen() {
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
 
         <View style={styles.chartContainer}>
+          <GoalsRadarChart />
+
           <View style={styles.chartContainer}>
             <ProgressChart
               data={data}
@@ -112,22 +113,6 @@ const styles = StyleSheet.create({
     right: 30,
     zIndex: 10,
   },
-  // chartCard: {
-  //   backgroundColor: "#FFF",
-  //   borderRadius: 12,
-  //   padding: 20,
-  //   marginVertical: 10,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 3 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 4,
-  //   elevation: 5,
-  // },
-
-  // chartContainer: {
-  //   flex: 1,
-  //   marginBottom: 10,
-  // },
   chartLabel: {
     fontSize: 14,
     fontWeight: "600",
