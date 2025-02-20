@@ -24,6 +24,7 @@ export default function SignUp() {
   const [endurance, setEndurance] = useState(1);
   const [weightLoss, setWeightLoss] = useState(1);
   const [health, setHealth] = useState(1);
+  const [hoursAvailable, setHoursAvailable] = useState(1);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ export default function SignUp() {
       !endurance ||
       !weightLoss ||
       !health ||
+      !hoursAvailable ||
       !password ||
       !confirmPassword
     ) {
@@ -71,6 +73,7 @@ export default function SignUp() {
           endurance,
           weightLoss,
           health,
+          hoursAvailable,
           password,
         }
       );
@@ -196,6 +199,21 @@ export default function SignUp() {
           step={1}
           value={health}
           onValueChange={setHealth}
+        />
+
+        <Text style={styles.sliderLabel}>
+          Hours Available: {hoursAvailable}
+        </Text>
+        <Text style={styles.subtitle}>
+          How much time can you spare to workout each week?
+        </Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={20}
+          step={0.5}
+          value={hoursAvailable}
+          onValueChange={setHoursAvailable}
         />
       </View>
 
