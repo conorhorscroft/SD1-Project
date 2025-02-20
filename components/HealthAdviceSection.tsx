@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { useHealthAdvice } from "@/hooks/useHealthAdvice";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const HealthAdviceSection = () => {
   const { getAdvice } = useHealthAdvice();
@@ -44,46 +45,53 @@ export const HealthAdviceSection = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Personalised Health {"\n"}& Wellness Advice
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
-        value={concernOrGoal}
-        onChangeText={setConcernOrGoal}
-        placeholderTextColor="#FFB84D"
-      />
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={fetchAdvice}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? "Loading..." : "Get Advice"}
+    <LinearGradient
+      colors={["#0a3d2e", "#2E7D32"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          Personalised Health {"\n"}& Wellness Advice
         </Text>
-      </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
+          value={concernOrGoal}
+          onChangeText={setConcernOrGoal}
+          placeholderTextColor="#FFB84D"
+        />
 
-      {isAdviceVisible && advice && (
-        <View style={styles.adviceContainer}>
-          <Markdown style={markdownStyles}>{advice}</Markdown>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={fetchAdvice}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? "Loading..." : "Get Advice"}
+          </Text>
+        </TouchableOpacity>
 
-          {/* Close Button */}
-          <TouchableOpacity style={styles.closeButton} onPress={closeAdvice}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+        {isAdviceVisible && advice && (
+          <View style={styles.adviceContainer}>
+            <Markdown style={markdownStyles}>{advice}</Markdown>
+
+            {/* Close Button */}
+            <TouchableOpacity style={styles.closeButton} onPress={closeAdvice}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "rgb(27, 94, 30)",
+    // backgroundColor: "rgb(27, 94, 30)",
     borderRadius: 15,
     margin: 10,
     color: "#FFB84D",

@@ -12,6 +12,7 @@ import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 import useHealthData from "@/hooks/useHealthData";
 import { HealthAdviceSection } from "@/components/HealthAdviceSection";
 import { WebView } from "react-native-webview";
+import { LinearGradient } from "expo-linear-gradient";
 
 const screenWidth = Dimensions.get("window").width;
 
