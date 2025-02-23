@@ -3,6 +3,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { View, Text, StyleSheet } from "react-native";
 import { RadarChart } from "@salmonco/react-native-radar-chart";
 import { LinearGradient } from "expo-linear-gradient";
+import { Theme } from "@/constants/theme/types";
+import { useTheme } from "@/constants/theme/ThemeContext";
 
 const GoalsRadarChart = () => {
   const { user, fetchUser } = useAuth();
@@ -20,37 +22,65 @@ const GoalsRadarChart = () => {
     { label: "Health", value: user.health ?? 0 },
   ];
 
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <LinearGradient
-      colors={["#0a3d2e", "#2E7D32"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
-      <View style={styles.container}>
-        <RadarChart
-          data={data}
-          maxValue={10}
-          gradientColor={{
-            startColor: "#0a3d2e",
-            endColor: "#2E7D32",
-            count: 5,
-          }}
-          stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
-          strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
-          strokeOpacity={[1, 1, 1, 1, 0.13]}
-          labelColor="#FFB84D"
-          labelSize={12}
-          labelDistance={1.18}
-          dataFillColor="#FF9F42"
-          dataFillOpacity={0.5}
-          dataStroke="#FFB84D"
-          dataStrokeWidth={2}
-          isCircle
-        />
-        <Text style={styles.title}>Your Fitness Goals</Text>
-      </View>
-    </LinearGradient>
+    <>
+      {theme.dark ? (
+        <LinearGradient
+          colors={["#0a3d2e", "#2E7D32"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.container}
+        >
+          <RadarChart
+            data={data}
+            maxValue={10}
+            gradientColor={{
+              startColor: "#0a3d2e",
+              endColor: "#2E7D32",
+              count: 5,
+            }}
+            stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
+            strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
+            strokeOpacity={[1, 1, 1, 1, 0.13]}
+            labelColor="#FFB84D"
+            labelSize={12}
+            labelDistance={1.18}
+            dataFillColor="#FF9F42"
+            dataFillOpacity={0.5}
+            dataStroke="#FFB84D"
+            dataStrokeWidth={2}
+            isCircle
+          />
+          <Text style={styles.title}>Your Fitness Goals</Text>
+        </LinearGradient>
+      ) : (
+        <View style={styles.container}>
+          <RadarChart
+            data={data}
+            maxValue={10}
+            gradientColor={{
+              startColor: "#0a3d2e",
+              endColor: "#2E7D32",
+              count: 5,
+            }}
+            stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
+            strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
+            strokeOpacity={[1, 1, 1, 1, 0.13]}
+            labelColor="#FFB84D"
+            labelSize={12}
+            labelDistance={1.18}
+            dataFillColor="#FF9F42"
+            dataFillOpacity={0.5}
+            dataStroke="#FFB84D"
+            dataStrokeWidth={2}
+            isCircle
+          />
+          <Text style={styles.title}>Your Fitness Goals</Text>
+        </View>
+      )}
+    </>
   );
 };
 

@@ -4,8 +4,6 @@ import { Stack, useNavigation, useRouter } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function MiscLayout() {
-  const colorScheme = useColorScheme();
-
   const navigation = useNavigation();
 
   React.useEffect(() => {

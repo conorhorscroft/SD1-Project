@@ -3,9 +3,7 @@ import {
   ScrollView,
   View,
   Text,
-  StyleSheet,
   Dimensions,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
@@ -14,20 +12,9 @@ import { HealthAdviceSection } from "@/components/HealthAdviceSection";
 import { WebView } from "react-native-webview";
 import { useTheme } from "@/constants/theme/ThemeContext";
 import { createThemedStyles } from "@/constants/theme/styles";
+import { createChartConfig } from "@/constants/theme/chartConfig";
 
 const screenWidth = Dimensions.get("window").width;
-
-const chartConfig = {
-  backgroundGradientFrom: "#0a3d2e",
-  backgroundGradientFromOpacity: 0.5,
-  backgroundGradientTo: "#2E7D32",
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-  strokeWidth: 6,
-  barPercentage: 0.4,
-  useShadowColorFromDataset: false,
-  decimalPlaces: 0,
-};
 
 export default function HealthScreen() {
   const { loading, energy, stepsData, chartLabels, distanceData } =
@@ -41,9 +28,13 @@ export default function HealthScreen() {
   // Theme variables
   const { theme, toggleTheme } = useTheme();
   const styles = createThemedStyles(theme);
+  const chartConfig = createChartConfig(theme);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+    >
       <HealthAdviceSection />
 
       <TouchableOpacity
@@ -130,79 +121,3 @@ export default function HealthScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#2E7D32",
-  },
-  chartContainer: {
-    padding: 10,
-    alignItems: "center",
-  },
-  chartWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    overflow: "hidden",
-    marginVertical: 10,
-  },
-  chartLabel: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFB84D",
-    textAlign: "center",
-    marginRight: 50,
-    marginLeft: -80,
-  },
-  chartTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFB84D",
-    textAlign: "center",
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#FFB84D",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#FFB84D",
-    marginBottom: 20,
-  },
-  webviewContainer: {
-    width: "100%",
-    height: 380,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  webview: {
-    flex: 1,
-    marginBottom: -80,
-  },
-  exerciseSection: {
-    width: "100%",
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: "rgb(27, 94, 30)",
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 15,
-    width: "95%",
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  buttonText: {
-    color: "#FFB84D",
-    fontSize: 16,
-    textAlign: "center",
-  },
-});

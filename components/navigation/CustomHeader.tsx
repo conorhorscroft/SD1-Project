@@ -12,23 +12,34 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { Link } from "expo-router";
+import { useTheme } from "@/constants/theme/ThemeContext";
 
 const CustomHeader = () => {
   const insets = useSafeAreaInsets();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <SafeAreaView>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>SlainteFit</Text>
-        <TouchableOpacity
-          style={[
-            styles.profileButton,
-            // { top: Platform.OS === "web" ? 20 : insets.top - 43 || 20 },
-          ]}
-        >
+        <TouchableOpacity style={styles.profileButton}>
           <Link href="/(misc)/profile">
             <Ionicons name="person-circle" size={32} color="#FFB84D" />
           </Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.themeButton} onPress={toggleTheme}>
+          <Ionicons
+            name={
+              theme.name === "light"
+                ? "sunny"
+                : theme.name === "dark"
+                ? "moon"
+                : "sync"
+            }
+            size={24}
+            color="#FFB84D"
+          />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -64,6 +75,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
     // top: Platform.OS === "ios" ? 50 : StatusBar.currentHeight + 10 || 20,
     right: 20,
+    zIndex: 10,
+  },
+  themeButton: {
+    position: "absolute",
+    left: 20,
     zIndex: 10,
   },
 });

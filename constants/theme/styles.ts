@@ -1,66 +1,102 @@
-import { StyleSheet } from "react-native";
+// theme/styles.ts
+import { StyleSheet, Dimensions } from "react-native";
 import { Theme } from "./types";
 
-export const createThemedStyles = (theme: Theme) =>
-  StyleSheet.create({
-    container: {
+export const createThemedStyles = (theme: Theme) => {
+  const screenWidth = Dimensions.get("window").width;
+
+  return StyleSheet.create({
+    // Main ScrollView style
+    scrollView: {
       flex: 1,
-      padding: 0,
-      justifyContent: "flex-start",
       backgroundColor: theme.colors.background,
-      borderRadius: 0,
-      paddingTop: 20,
     },
-    title: {
-      fontSize: 24,
-      fontWeight: "bold",
-      textAlign: "center",
-      marginBottom: 10,
-      color: theme.colors.accent,
+    // ScrollView content container style
+    scrollViewContent: {
+      flexGrow: 1,
+      alignItems: "center",
+      paddingBottom: 20,
     },
-    profileButton: {
-      position: "absolute",
-      right: 30,
-      zIndex: 10,
+    // Chart styles
+    chartContainer: {
+      padding: 10,
+      alignItems: "center",
+      width: "100%",
+    },
+    chartWrapper: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 20,
+      overflow: "hidden",
+      marginVertical: 10,
+      backgroundColor: theme.dark ? "transparent" : "#FFFFFF",
+      ...(theme.dark
+        ? {}
+        : {
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }),
     },
     chartLabel: {
-      fontSize: 14,
-      fontWeight: "600",
-      color: theme.colors.accent,
-      textAlign: "center",
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    chartContainer: {
-      backgroundColor: theme.colors.background,
-      padding: 0,
-      borderRadius: 20,
-      shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 6,
-      alignItems: "center",
-      overflow: "hidden",
-      paddingTop: 0,
-    },
-    text: {
-      color: theme.colors.text,
-      fontSize: 16,
-    },
-    heading: {
-      color: theme.colors.text,
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: "bold",
+      color: theme.dark ? theme.colors.accent : theme.colors.accent,
+      textAlign: "center",
+      marginRight: 50,
+      marginLeft: -80,
     },
+    chartTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.dark ? theme.colors.accent : theme.colors.accent,
+      textAlign: "center",
+      marginTop: 15,
+      marginBottom: 15,
+    },
+    // Exercise section styles
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      marginBottom: 5,
+      color: theme.colors.accent,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: theme.colors.accent,
+      marginBottom: 20,
+    },
+    webviewContainer: {
+      width: "100%",
+      height: 380,
+      borderRadius: 10,
+      overflow: "hidden",
+    },
+    webview: {
+      flex: 1,
+      marginBottom: -80,
+    },
+    exerciseSection: {
+      width: "100%",
+      marginTop: 20,
+    },
+    // Button styles
     button: {
-      backgroundColor: theme.colors.primary,
-      padding: 12,
+      backgroundColor: theme.dark ? theme.colors.buttonBackground : "#FFF",
+      paddingVertical: 10,
       borderRadius: 8,
       alignItems: "center",
+      marginTop: 10,
+      marginBottom: 15,
+      width: "95%",
     },
     buttonText: {
-      color: "#FFFFFF",
+      color: theme.colors.accent,
       fontSize: 16,
-      fontWeight: "600",
+      textAlign: "center",
     },
   });
+};
