@@ -11,6 +11,8 @@ import { LineChart, ProgressChart } from "react-native-chart-kit";
 import { useAuth } from "@/hooks/useAuth";
 import { useFocusEffect } from "@react-navigation/native";
 import GoalsRadarChart from "@/components/GoalsRadarChart";
+import { useTheme } from "@/constants/theme/ThemeContext";
+import { createThemedStyles } from "@/constants/theme/styles";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -45,6 +47,10 @@ const chartConfig = {
 export default function HomeScreen() {
   const { user, fetchUser } = useAuth();
   const [refresh, setRefresh] = useState(false);
+
+  // Theme variables
+  const { theme, toggleTheme } = useTheme();
+  const styles = createThemedStyles(theme);
 
   useFocusEffect(
     useCallback(() => {

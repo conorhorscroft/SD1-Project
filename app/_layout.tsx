@@ -4,6 +4,7 @@ import CustomHeader from "@/components/navigation/CustomHeader";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ActivityIndicator, View } from "react-native";
 import React from "react";
+import { ThemeProvider } from "../constants/theme/ThemeContext";
 
 function RootLayoutContent() {
   const { isLoading } = useAuth();
@@ -27,7 +28,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootLayoutContent />
+      <ThemeProvider>
+        <RootLayoutContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

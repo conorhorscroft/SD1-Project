@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { Stack, useNavigation, useRouter } from "expo-router";
 
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function MiscLayout() {

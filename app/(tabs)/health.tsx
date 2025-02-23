@@ -12,7 +12,8 @@ import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
 import useHealthData from "@/hooks/useHealthData";
 import { HealthAdviceSection } from "@/components/HealthAdviceSection";
 import { WebView } from "react-native-webview";
-import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "@/constants/theme/ThemeContext";
+import { createThemedStyles } from "@/constants/theme/styles";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -36,6 +37,10 @@ export default function HealthScreen() {
   const toggleVisibility = () => {
     setIsVisible((prevState) => !prevState);
   };
+
+  // Theme variables
+  const { theme, toggleTheme } = useTheme();
+  const styles = createThemedStyles(theme);
 
   return (
     <ScrollView style={styles.container}>
