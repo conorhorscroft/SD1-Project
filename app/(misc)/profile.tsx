@@ -74,6 +74,11 @@ export default function Profile() {
               <Text style={styles.infoText}>{user?.height} cm</Text>
             </View>
             <View style={styles.row}>
+              <User size={20} color="#4A90E2" />
+              <Text style={styles.label}>Gender:</Text>
+              <Text style={styles.infoText}>{user?.gender} </Text>
+            </View>
+            <View style={styles.row}>
               <Calendar size={20} color="#4A90E2" />
               <Text style={styles.label}>Age:</Text>
               <Text style={styles.infoText}>{user?.age} years</Text>

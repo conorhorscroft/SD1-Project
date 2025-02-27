@@ -6,10 +6,12 @@ import {
   StyleSheet,
   Button,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import axios from "axios";
 import { useRouter } from "expo-router";
+import SelectDropdown from "react-native-select-dropdown";
 
 export default function SignUp() {
   const router = useRouter();
@@ -29,6 +31,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [gender, setGender] = useState("");
 
   const handleSave = async () => {
     if (
@@ -37,6 +40,7 @@ export default function SignUp() {
       !phone ||
       !weight ||
       !height ||
+      !gender ||
       !age ||
       !experience ||
       !strength ||
@@ -75,6 +79,7 @@ export default function SignUp() {
           health,
           hoursAvailable,
           password,
+          gender,
         }
       );
 
@@ -99,12 +104,14 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Name"
+        placeholderTextColor={"#888"}
         value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor={"#888"}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -113,13 +120,16 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Phone"
+        placeholderTextColor={"#888"}
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
+
       <TextInput
         style={styles.input}
         placeholder="Weight (kg)"
+        placeholderTextColor={"#888"}
         value={weight}
         onChangeText={setWeight}
         keyboardType="numeric"
@@ -127,10 +137,52 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Height (cm)"
+        placeholderTextColor={"#888"}
         value={height}
         onChangeText={setHeight}
         keyboardType="numeric"
       />
+
+      <View style={styles.container}>
+        <Text style={styles.label}>Select Gender:</Text>
+
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={[styles.option, gender === "Male" && styles.selectedOption]}
+            onPress={() => setGender("Male")}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                gender === "Male" && styles.selectedOptionText,
+              ]}
+            >
+              Male
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.option,
+              gender === "Female" && styles.selectedOption,
+            ]}
+            onPress={() => setGender("Female")}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                gender === "Female" && styles.selectedOptionText,
+              ]}
+            >
+              Female
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {gender ? (
+          <Text style={styles.selectedText}>Selected: {gender}</Text>
+        ) : null}
+      </View>
 
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>Age: {age}</Text>
@@ -220,6 +272,7 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor={"#888"}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -227,6 +280,7 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
+        placeholderTextColor={"#888"}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
@@ -311,5 +365,59 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 20,
     textAlign: "center",
+  },
+  dropdownBtnStyle: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 15,
+  },
+  dropdownBtnTextStyle: {
+    textAlign: "left",
+    color: "#444",
+    fontSize: 16,
+  },
+  dropdownStyle: {
+    backgroundColor: "#EFEFEF",
+    borderRadius: 8,
+  },
+  dropdownRowTextStyle: {
+    color: "#444",
+    textAlign: "left",
+    fontSize: 16,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  optionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  option: {
+    flex: 1,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    marginHorizontal: 4,
+    alignItems: "center",
+  },
+  selectedOption: {
+    backgroundColor: "#007AFF",
+    borderColor: "#007AFF",
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  selectedOptionText: {
+    color: "white",
+  },
+  selectedText: {
+    marginTop: 16,
+    fontSize: 16,
   },
 });

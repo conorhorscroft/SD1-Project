@@ -53,6 +53,7 @@ export default function HomeScreen() {
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
         <View style={styles.chartContainer}>
           <GoalsRadarChart />
+          <Text style={styles.chartLabel}>Your Fitness Goals</Text>
           <View style={styles.chartContainer}>
             <View style={styles.chartWrapper}>
               <ProgressChart

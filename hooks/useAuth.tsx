@@ -22,6 +22,7 @@ type User = {
   weightLoss: number;
   health: number;
   hoursAvailable: number;
+  gender: string;
 };
 
 type LoginResponse = {
@@ -40,6 +41,7 @@ type LoginResponse = {
   weightLoss: number;
   health: number;
   hoursAvailable: number;
+  gender: string;
 };
 
 // update user data type
@@ -141,6 +143,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         weightLoss: loginResponse.weightLoss,
         health: loginResponse.health,
         hoursAvailable: loginResponse.hoursAvailable,
+        gender: loginResponse.gender,
       };
 
       await AsyncStorage.setItem("userData", JSON.stringify(userData));

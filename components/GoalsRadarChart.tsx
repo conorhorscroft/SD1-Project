@@ -45,15 +45,14 @@ const GoalsRadarChart = () => {
             strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
             strokeOpacity={[1, 1, 1, 1, 0.13]}
             labelColor="#FFB84D"
-            labelSize={12}
-            labelDistance={1.18}
+            labelSize={10}
+            labelDistance={1.22}
             dataFillColor="#FF9F42"
             dataFillOpacity={0.5}
             dataStroke="#FFB84D"
             dataStrokeWidth={2}
             isCircle
           />
-          <Text style={styles.title}>Your Fitness Goals</Text>
         </LinearGradient>
       ) : (
         <View style={styles.container}>
@@ -68,16 +67,15 @@ const GoalsRadarChart = () => {
             stroke={["#FF9F42", "#FFB84D", "#FFBB58", "#FF8C42", "#FFB84D"]}
             strokeWidth={[0.5, 0.5, 0.5, 0.5, 1]}
             strokeOpacity={[1, 1, 1, 1, 0.13]}
-            labelColor="#FFB84D"
-            labelSize={12}
-            labelDistance={1.18}
+            labelColor="#2E7D32"
+            labelSize={10}
+            labelDistance={1.22}
             dataFillColor="#FF9F42"
             dataFillOpacity={0.5}
             dataStroke="#FFB84D"
             dataStrokeWidth={2}
             isCircle
           />
-          <Text style={styles.title}>Your Fitness Goals</Text>
         </View>
       )}
     </>

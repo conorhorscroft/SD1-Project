@@ -12,6 +12,7 @@ import Markdown from "react-native-markdown-display";
 import { useHealthAdvice } from "@/hooks/useHealthAdvice";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@/constants/theme/ThemeContext";
+import { Theme } from "@/constants/theme/types";
 
 export const HealthAdviceSection = () => {
   const { getAdvice } = useHealthAdvice();
@@ -63,7 +64,7 @@ export const HealthAdviceSection = () => {
             placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
             value={concernOrGoal}
             onChangeText={setConcernOrGoal}
-            placeholderTextColor="#FFB84D"
+            placeholderTextColor="#2E7D32"
           />
 
           <TouchableOpacity
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#FFB84D",
+    color: "#2E7D32",
     marginBottom: 15,
     textAlign: "center",
   },

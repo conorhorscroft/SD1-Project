@@ -10,7 +10,7 @@ export const createChartConfig = (theme: Theme) => ({
   color: (opacity = 1) =>
     theme.dark
       ? `rgba(255, 184, 77, ${opacity})`
-      : `rgba(255, 184, 77, ${opacity})`,
+      : `rgba(46, 125, 50, ${opacity})`,
   strokeWidth: 6,
   barPercentage: 0.4,
   useShadowColorFromDataset: false,
@@ -19,7 +19,7 @@ export const createChartConfig = (theme: Theme) => ({
   labelColor: (opacity = 1) =>
     theme.dark
       ? `rgba(255, 255, 255, ${opacity})`
-      : `rgba(0, 0, 0, ${opacity})`,
+      : `rgba(46, 125, 50, ${opacity})`,
   propsForBackgroundLines: {
     strokeWidth: 1,
     stroke: theme.dark ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)",

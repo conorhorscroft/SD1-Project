@@ -30,13 +30,22 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [systemColorScheme, themeMode]);
 
   // Toggle theme manually
+  // const toggleTheme = () => {
+  //   if (themeMode === "light") {
+  //     setThemeMode("dark");
+  //     setTheme(darkTheme);
+  //   } else if (themeMode === "dark") {
+  //     setThemeMode("system");
+  //     setTheme(systemColorScheme === "dark" ? darkTheme : lightTheme);
+  //   } else {
+  //     setThemeMode("light");
+  //     setTheme(lightTheme);
+  //   }
+  // };
   const toggleTheme = () => {
     if (themeMode === "light") {
       setThemeMode("dark");
       setTheme(darkTheme);
-    } else if (themeMode === "dark") {
-      setThemeMode("system");
-      setTheme(systemColorScheme === "dark" ? darkTheme : lightTheme);
     } else {
       setThemeMode("light");
       setTheme(lightTheme);
