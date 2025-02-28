@@ -56,7 +56,7 @@ export const HealthAdviceSection = () => {
           end={{ x: 1, y: 1 }}
           style={styles.container}
         >
-          <Text style={styles.title}>
+          <Text style={styles.titleDark}>
             Personalised Health {"\n"}& Wellness Advice
           </Text>
           <TextInput
@@ -64,7 +64,7 @@ export const HealthAdviceSection = () => {
             placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
             value={concernOrGoal}
             onChangeText={setConcernOrGoal}
-            placeholderTextColor="#2E7D32"
+            placeholderTextColor="#FFB84D"
           />
 
           <TouchableOpacity
@@ -93,11 +93,11 @@ export const HealthAdviceSection = () => {
         </LinearGradient>
       ) : (
         <View style={styles.container}>
-          <Text style={styles.title}>
+          <Text style={styles.titleLight}>
             Personalised Health {"\n"}& Wellness Advice
           </Text>
           <TextInput
-            style={styles.input}
+            style={styles.inputLight}
             placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
             value={concernOrGoal}
             onChangeText={setConcernOrGoal}
@@ -116,7 +116,7 @@ export const HealthAdviceSection = () => {
 
           {isAdviceVisible && advice && (
             <View style={styles.adviceContainer}>
-              <Markdown style={markdownStyles}>{advice}</Markdown>
+              <Markdown style={markdownStylesTwo}>{advice}</Markdown>
 
               {/* Close Button */}
               <TouchableOpacity
@@ -141,10 +141,17 @@ const styles = StyleSheet.create({
     margin: 10,
     color: "#FFB84D",
   },
-  title: {
+  titleLight: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#2E7D32",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  titleDark: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFB84D",
     marginBottom: 15,
     textAlign: "center",
   },
@@ -154,6 +161,15 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 15,
     color: "#FFB84D",
+    borderWidth: 1,
+    borderColor: "#FFB84D",
+  },
+  inputLight: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+    color: "#2E7D32",
     borderWidth: 1,
     borderColor: "#FFB84D",
   },
@@ -197,4 +213,12 @@ const markdownStyles = {
   heading2: { color: "#FFB84D" },
   strong: { color: "#FFB84D" },
   bullet_list: { color: "#fff" },
+};
+
+const markdownStylesTwo = {
+  body: { color: "#2E7D32" },
+  heading1: { color: "#2E7D32" },
+  heading2: { color: "#2E7D32" },
+  strong: { color: "rgb(27, 94, 30)" },
+  bullet_list: { color: "#2E7D32" },
 };

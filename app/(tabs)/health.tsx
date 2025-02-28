@@ -24,27 +24,35 @@ export default function HealthScreen() {
 
   const { user, fetchUser } = useAuth();
 
+  // Assign default values if unavailable
+  const endurance = user?.endurance ?? 0;
+  const strength = user?.strength ?? 0;
+  const weightLoss = user?.weightLoss ?? 0;
+  const hoursAvailable = user?.hoursAvailable ?? 0;
+  const weight = user?.weight ?? 70;
+  const height = user?.height ?? 160;
+  const age = user?.age ?? 18;
+
+  // Calculate BMR based on revised Harris-Benedict equation
   let basalMetabolicRate;
   let calorieTarget;
   let activityMultiplier;
 
-  // Calculate BMR based on revised Harris-benedict equation
   if (user?.gender === "Male") {
     basalMetabolicRate =
-      13.397 * user?.weight + 4.799 * user?.height - 5.677 * user?.age + 88.362;
+      13.397 * weight + 4.799 * height - 5.677 * age + 88.362;
   } else {
-    basalMetabolicRate =
-      9.247 * user?.weight + 3.098 * user?.height - 4.33 * user?.age + 447.593;
+    basalMetabolicRate = 9.247 * weight + 3.098 * height - 4.33 * age + 447.593;
   }
 
   // Determine activity multiplier based on hours available
-  if (user?.hoursAvailable <= 1) {
+  if (hoursAvailable <= 1) {
     activityMultiplier = 1.2;
-  } else if (user?.hoursAvailable <= 4) {
+  } else if (hoursAvailable <= 4) {
     activityMultiplier = 1.375;
-  } else if (user?.hoursAvailable <= 9) {
+  } else if (hoursAvailable <= 9) {
     activityMultiplier = 1.55;
-  } else if (user?.hoursAvailable <= 14) {
+  } else if (hoursAvailable <= 14) {
     activityMultiplier = 1.725;
   } else {
     activityMultiplier = 1.9;
@@ -54,28 +62,28 @@ export default function HealthScreen() {
   calorieTarget = basalMetabolicRate * activityMultiplier;
 
   // Adjust for training focus
-  const totalFocus = user?.endurance + user?.strength + user?.weightLoss;
-  const enduranceRatio = user?.endurance / totalFocus;
-  const strengthRatio = user?.strength / totalFocus;
-  const weightLossRatio = user?.weightLoss / totalFocus;
+  const totalFocus = endurance + strength + weightLoss;
+  const enduranceRatio = endurance / totalFocus;
+  const strengthRatio = strength / totalFocus;
+  const weightLossRatio = weightLoss / totalFocus;
 
   // Endurance adjustment
-  if (user?.endurance > user?.strength && user?.endurance > user?.weightLoss) {
+  if (endurance > strength && endurance > weightLoss) {
     calorieTarget *= 1 + enduranceRatio * 0.15;
   }
 
   // Strength adjustment
-  if (user?.strength > user?.endurance && user?.strength > user?.weightLoss) {
+  if (strength > endurance && strength > weightLoss) {
     calorieTarget *= 1 + strengthRatio * 0.15;
   }
 
   // Weight loss adjustment (caloric deficit)
-  if (user?.weightLoss > user?.endurance && user?.weightLoss > user?.strength) {
+  if (weightLoss > endurance && weightLoss > strength) {
     calorieTarget *= 1 - weightLossRatio * 0.3;
   }
 
-  // Final calorie target
-  calorieTarget = Math.round(calorieTarget);
+  // Final calorie target (round to nearest 50)
+  calorieTarget = Math.round(calorieTarget / 50) * 50;
 
   const toggleVisibility = () => {
     setIsVisible((prevState) => !prevState);
