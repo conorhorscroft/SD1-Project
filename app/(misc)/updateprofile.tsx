@@ -431,17 +431,17 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1B5E1E",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 20,
-    width: "90%",
+    marginRight: 20,
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
   },
   homebutton: {

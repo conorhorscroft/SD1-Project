@@ -119,12 +119,12 @@ export default function Profile() {
         <View style={styles.buttonrow}>
           <TouchableOpacity style={styles.button}>
             <Link href="/updateprofile">
-              <Text>Update Profile Details</Text>
+              <Text style={styles.buttonText}>Update Profile Details</Text>
             </Link>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={logout}>
-            <Text>Logout</Text>
+            <Text style={styles.buttonText}>Logout</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1B5E1E",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
   },
   card: {

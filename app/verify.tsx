@@ -66,7 +66,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         style={styles.homebutton}
         onPress={() => router.replace("/(tabs)")}
       >
-        <Icon name="home" size={30} color="#000" />
+        <Icon name="home" size={30} color="#1B5E1E" />
       </TouchableOpacity>
       <Text style={styles.title}>Verify Email</Text>
 
@@ -85,19 +85,33 @@ export default function Login({ navigation }: LoginScreenProps) {
         onChangeText={setVerificationCode}
       />
 
-      <Button
-        title={loading ? "Verifying..." : "Verify"}
+      <TouchableOpacity
+        style={styles.button}
         onPress={handleVerification}
         disabled={loading}
-      />
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Verifying..." : "Verify"}
+        </Text>
+      </TouchableOpacity>
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#f5f5f5",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#1B5E1E",
+  },
   input: {
     height: 40,
     borderColor: "gray",
@@ -108,12 +122,27 @@ const styles = StyleSheet.create({
   error: { color: "red", marginTop: 20, textAlign: "center" },
   homebutton: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     borderWidth: 2,
-    borderColor: "#000",
+    borderColor: "#1B5E1E",
     borderRadius: 8,
     padding: 2,
     marginBottom: 15,
-    marginRight: 10,
+    marginRight: 330,
+  },
+
+  button: {
+    backgroundColor: "#1B5E1E",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

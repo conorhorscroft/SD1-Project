@@ -286,18 +286,22 @@ export default function SignUp() {
         secureTextEntry
       />
 
-      <View style={styles.buttonContainer}>
-        <Button
-          title={loading ? "Signing Up..." : "Sign Up!"}
-          onPress={handleSave}
-          disabled={loading}
-        />
-        <View style={styles.buttonSpacing} />
-        <Button
-          title="Back to Sign in"
-          onPress={() => router.push("/signin")}
-        />
-      </View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSave}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Signing Up..." : "Sign Up!"}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/signin")}
+      >
+        <Text style={styles.buttonText}>Back to Sign in</Text>
+      </TouchableOpacity>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </ScrollView>
@@ -355,39 +359,10 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 15,
   },
-  buttonContainer: {
-    marginTop: 20,
-  },
-  buttonSpacing: {
-    height: 10,
-  },
   error: {
     color: "red",
     marginTop: 20,
     textAlign: "center",
-  },
-  dropdownBtnStyle: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 15,
-  },
-  dropdownBtnTextStyle: {
-    textAlign: "left",
-    color: "#444",
-    fontSize: 16,
-  },
-  dropdownStyle: {
-    backgroundColor: "#EFEFEF",
-    borderRadius: 8,
-  },
-  dropdownRowTextStyle: {
-    color: "#444",
-    textAlign: "left",
-    fontSize: 16,
   },
   label: {
     fontSize: 16,
@@ -407,8 +382,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectedOption: {
-    backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
+    backgroundColor: "#1B5E1E",
+    borderColor: "#1B5E1E",
   },
   optionText: {
     fontSize: 16,
@@ -419,5 +394,19 @@ const styles = StyleSheet.create({
   selectedText: {
     marginTop: 16,
     fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#1B5E1E",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

@@ -101,7 +101,12 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 16 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#F8F9FA",
+  },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
   input: {
     height: 40,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1B5E1E",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
@@ -121,6 +126,8 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
