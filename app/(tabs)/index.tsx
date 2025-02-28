@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, Dimensions, ScrollView } from "react-native";
 import { LineChart, ProgressChart } from "react-native-chart-kit";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,8 +8,7 @@ import { useTheme } from "@/constants/theme/ThemeContext";
 import { createThemedStyles } from "@/constants/theme/styles";
 import { createChartConfig } from "@/constants/theme/chartConfig";
 
-const screenWidth = Dimensions.get("window").width;
-
+// Placeholder data for charts
 const data = {
   labels: ["Swim", "Bike", "Run"],
   data: [0.4, 0.6, 0.8],
@@ -28,17 +27,22 @@ const dataTwo = {
 };
 
 export default function HomeScreen() {
+  // Get screenwidth for device based resizing
+  const screenWidth = Dimensions.get("window").width;
+
+  // Pull profile data from context
   const { user, fetchUser } = useAuth();
-  const [refresh, setRefresh] = useState(false);
 
   // Theme variables
   const { theme, toggleTheme } = useTheme();
   const styles = createThemedStyles(theme);
   const chartConfig = createChartConfig(theme);
 
+  // Dynamically refresh
+  const [refresh, setRefresh] = useState(false);
   useFocusEffect(
     useCallback(() => {
-      fetchUser(); // Trigger re-fresh
+      fetchUser();
     }, [])
   );
 
@@ -49,6 +53,7 @@ export default function HomeScreen() {
       key={refresh ? "refresh-true" : "refresh-false"}
     >
       <View style={styles.scrollViewContent}>
+        <Text style={styles.title}></Text>
         <Text style={styles.title}>Hello {user?.name},</Text>
         <Text style={styles.title}>Welcome to SlainteFit!</Text>
         <View style={styles.chartContainer}>
