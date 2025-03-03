@@ -2,8 +2,28 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PieChart } from "react-native-chart-kit";
+import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
 
 export default function NutritionScreen() {
+
+  const { token, user } = useAuth();
+  const AuthDebugDisplay = () => {
+    const { token, user } = useAuth();
+
+    return (
+        <View style={styles.debugContainer}>
+          <Text style={styles.debugTitle}>Debug Info:</Text>
+          <ScrollView horizontal style={styles.debugScroll}>
+            <Text style={styles.debugText}>User ID: {user?.id}</Text>
+          </ScrollView>
+          <ScrollView horizontal style={styles.debugScroll}>
+            <Text style={styles.debugText}>Token: {token}</Text>
+          </ScrollView>
+        </View>
+    );
+  };
+
   const [foodTitle, setFoodTitle] = useState("");
   const [nutritionData, setNutritionData] = useState(null);
   const [error, setError] = useState("");
@@ -36,22 +56,40 @@ export default function NutritionScreen() {
 
   // Function to save daily calories to the backend
   const saveDailyCalories = async () => {
+
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+
     if (!dailyCalories || isNaN(dailyCalories)) {
       setError("Please enter a valid number for calories");
       return;
     }
 
+    const requestData = {
+      totalCalories: dailyCalories
+    };
+
+    console.log(
+        "Request URL:",
+        `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`   //user logged in id 
+    );
+    console.log("Request Data:", requestData);                   //passing user total caloriesnpx
+    console.log("Headers:", { Authorization: `Bearer ${token}` });
+
     try {
-      const response = await fetch("http://localhost:3000/save-daily-calories", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          profile_id: 2, // Default profile_id as 1
-          total_calories: dailyCalories,
-        }),
-      });
+
+      const response = await axios.post(
+          `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+      );
 
       const data = await response.json();
 
