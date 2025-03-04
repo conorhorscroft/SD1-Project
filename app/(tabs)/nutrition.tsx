@@ -74,15 +74,14 @@ export default function NutritionScreen() {
 
     console.log(
         "Request URL:",
-        `https://localhost:8080/api/nutrition/save-daily-calories/${user?.id}`   //user logged in id 
+        `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
     );
-    console.log("Request Data:", requestData);                   //passing user total caloriesnpx
+    console.log("Request Data:", requestData);
     console.log("Headers:", { Authorization: `Bearer ${token}` });
 
     try {
-
       const response = await axios.post(
-          `https://localhost:8080/api/nutrition/save-daily-calories/${user?.id}`,
+          `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
           requestData,
           {
             headers: {
@@ -91,19 +90,22 @@ export default function NutritionScreen() {
           }
       );
 
-      const data = await response.json();
+      console.log('Response Data:', response.data);
 
-      if (response.ok) {
+      
+      if (response.status === 201) { // 201 is the standard success status code for creation
         setSuccessMessage("Daily calories saved successfully!");
         setError("");
       } else {
         setSuccessMessage("");
-        setError(data.error || "Failed to save data. Please try again.");
+        setError(response.data.error || "Failed to save data. Please try again.");
       }
     } catch (err) {
-      setError("Failed to save data. Please try again."+ err);
+      // If there is an error (network or server issue)
+      setError("Failed to save data. Please try again." + err.message);
       setSuccessMessage("");
     }
+
   };
 
   const pieChartData = nutritionData
