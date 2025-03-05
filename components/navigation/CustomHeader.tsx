@@ -21,7 +21,7 @@ const CustomHeader = () => {
   return (
     <SafeAreaView>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>SlainteFit</Text>
+        <Text style={styles.headerText}>SláinteFit</Text>
         <TouchableOpacity style={styles.profileButton}>
           <Link href="/(misc)/profile">
             <Ionicons name="person-circle" size={32} color="#FFB84D" />

@@ -111,7 +111,7 @@ export const createThemedStyles = (theme: Theme) => {
     label: {
       fontSize: 16,
       marginBottom: 10,
-      color: "#333",
+      color: theme.dark ? theme.colors.accent : theme.colors.accent,
     },
     slider: {
       width: "100%",

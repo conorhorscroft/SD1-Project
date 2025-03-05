@@ -55,7 +55,7 @@ export default function HomeScreen() {
       <View style={styles.scrollViewContent}>
         <Text style={styles.title}></Text>
         <Text style={styles.title}>Hello {user?.name},</Text>
-        <Text style={styles.title}>Welcome to SlainteFit!</Text>
+        <Text style={styles.title}>Welcome to SláinteFit!</Text>
         <View style={styles.chartContainer}>
           <GoalsRadarChart />
           <Text style={styles.chartLabel}>Your Fitness Goals</Text>
