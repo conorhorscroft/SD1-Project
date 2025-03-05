@@ -98,5 +98,51 @@ export const createThemedStyles = (theme: Theme) => {
       fontSize: 16,
       textAlign: "center",
     },
+    logContainer: {
+      padding: 15,
+      backgroundColor: "#f9f9f9",
+      borderRadius: 10,
+      marginVertical: 10,
+    },
+    inputContainer: {
+      marginVertical: 10,
+      alignItems: "center",
+    },
+    label: {
+      fontSize: 16,
+      marginBottom: 10,
+      color: "#333",
+    },
+    slider: {
+      width: "100%",
+      height: 40,
+    },
+    sliderValue: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: theme.dark ? theme.colors.accent : theme.colors.accent,
+    },
+    saveButton: {
+      backgroundColor: "#4A90E2",
+      padding: 15,
+      borderRadius: 10,
+      alignItems: "center",
+      marginTop: 15,
+    },
+    saveButtonText: {
+      color: "white",
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    sliderWithIconsContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: screenWidth - 20,
+      paddingHorizontal: 20,
+    },
+    sliderWithIcons: {
+      flex: 1,
+      marginHorizontal: 10,
+    },
   });
 };
