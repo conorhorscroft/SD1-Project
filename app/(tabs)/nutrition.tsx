@@ -1,36 +1,22 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PieChart } from "react-native-chart-kit";
 import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 
 export default function NutritionScreen() {
-
   const { token, user } = useAuth();
-  const AuthDebugDisplay = () => {
-    const { token, user } = useAuth();
-
-    return (
-        <View style={styles.debugContainer}>
-          <Text style={styles.debugTitle}>Debug Info:</Text>
-          <ScrollView horizontal style={styles.debugScroll}>
-            <Text style={styles.debugText}>User ID: {user?.id}</Text>
-          </ScrollView>
-          <ScrollView horizontal style={styles.debugScroll}>
-            <Text style={styles.debugText}>Token: {token}</Text>
-          </ScrollView>
-        </View>
-    );
-  };
 
   const [foodTitle, setFoodTitle] = useState("");
-  const [nutritionData, setNutritionData] = useState(null);
+  const [meals, setMeals] = useState([]);
+  const [totalNutrition, setTotalNutrition] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
   const [error, setError] = useState("");
-  const [dailyCalories, setDailyCalories] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [totalCalories, setTotalCalories] = useState(null);
+  const [dailyCalories, setDailyCalories] = useState("");
+  const [isDailyCaloriesSaved, setIsDailyCaloriesSaved] = useState(false);
 
-  // Function to fetch nutrition data
   const fetchNutritionData = async () => {
     if (!foodTitle) {
       setError("Please enter a food title");
@@ -44,13 +30,88 @@ export default function NutritionScreen() {
       const data = await response.json();
 
       if (data && data.calories) {
-        setNutritionData(data);
-        setError(""); // Clear previous errors
+        const newMeal = {
+          title: foodTitle,
+          calories: data.calories.value,
+          protein: data.protein.value,
+          carbs: data.carbs.value,
+          fat: data.fat.value,
+        };
+
+        const savedMeal = await saveMealToBackend(newMeal);
+
+        if (savedMeal) {
+          setMeals([...meals, { ...newMeal, id: savedMeal.id }]); // Store backend ID
+          setTotalNutrition(prev => ({
+            calories: prev.calories + newMeal.calories,
+            protein: prev.protein + newMeal.protein,
+            carbs: prev.carbs + newMeal.carbs,
+            fat: prev.fat + newMeal.fat
+          }));
+          setTotalCalories(prev => prev - newMeal.calories);
+          setError("");
+        }
+
       } else {
         setError("No nutrition data found for this food.");
       }
     } catch (err) {
       setError("Failed to fetch data. Please try again later.");
+    }
+  };
+
+
+  const saveMealToBackend = async (meal) => {
+    if (!token) {
+      setError("User is not authenticated.");
+      return;
+    }
+
+    const requestData = {
+      date: new Date().toISOString().split("T")[0],
+      calories: meal.calories,
+      protein: meal.protein,
+      carbs: meal.carbs,
+      fats: meal.fat,
+      hydration: 0,
+      userId: user?.id,
+    };
+
+    try {
+      const response = await axios.post(
+          "http://sd1-backend.onrender.com/api/nutrition/save-nutrition-data",
+          requestData,
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      return response.data; // return saved meal with its ID
+
+    } catch (err) {
+      setError(`Failed to save meal data. ${err.message}`);
+    }
+  };
+
+  const removeMeal = async (index) => {
+    const mealToRemove = meals[index];
+
+    try {
+      if (mealToRemove.id) { // Only delete if ID exists
+        await axios.delete(
+            `http://sd1-backend.onrender.com/api/nutrition/delete-nutrition-data/${mealToRemove.id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      setMeals(meals.filter((_, i) => i !== index));
+      setTotalNutrition(prev => ({
+        calories: prev.calories - mealToRemove.calories,
+        protein: prev.protein - mealToRemove.protein,
+        carbs: prev.carbs - mealToRemove.carbs,
+        fat: prev.fat - mealToRemove.fat
+      }));
+      setTotalCalories(prev => prev + mealToRemove.calories);
+    } catch (err) {
+      setError(`Failed to delete meal. ${err.message}`);
     }
   };
 
@@ -74,14 +135,14 @@ export default function NutritionScreen() {
 
     console.log(
         "Request URL:",
-        `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
+        `http://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
     );
     console.log("Request Data:", requestData);
     console.log("Headers:", { Authorization: `Bearer ${token}` });
 
     try {
       const response = await axios.post(
-          `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
+          `http://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
           requestData,
           {
             headers: {
@@ -92,10 +153,12 @@ export default function NutritionScreen() {
 
       console.log('Response Data:', response.data);
 
-      
+      // Since Axios automatically parses the response body, just use response.data
       if (response.status === 201) { // 201 is the standard success status code for creation
+        setTotalCalories(dailyCalories);
         setSuccessMessage("Daily calories saved successfully!");
         setError("");
+        setIsDailyCaloriesSaved(true);
       } else {
         setSuccessMessage("");
         setError(response.data.error || "Failed to save data. Please try again.");
@@ -108,93 +171,48 @@ export default function NutritionScreen() {
 
   };
 
-  const pieChartData = nutritionData
-      ? [
-        {
-          name: "Protein",
-          population: nutritionData.protein.value,
-          color: "#FF6384",
-          legendFontColor: "#7F7F7F",
-          legendFontSize: 15,
-        },
-        {
-          name: "Carbs",
-          population: nutritionData.carbs.value,
-          color: "#36A2EB",
-          legendFontColor: "#7F7F7F",
-          legendFontSize: 15,
-        },
-        {
-          name: "Fat",
-          population: nutritionData.fat.value,
-          color: "#FFCE56",
-          legendFontColor: "#7F7F7F",
-          legendFontSize: 15,
-        },
-      ]
-      : [];
+  const pieChartData = [
+    { name: "Protein", population: totalNutrition.protein, color: "#FF6384", legendFontColor: "#7F7F7F", legendFontSize: 15 },
+    { name: "Carbs", population: totalNutrition.carbs, color: "#36A2EB", legendFontColor: "#7F7F7F", legendFontSize: 15 },
+    { name: "Fat", population: totalNutrition.fat, color: "#FFCE56", legendFontColor: "#7F7F7F", legendFontSize: 15 },
+  ];
 
   return (
       <SafeAreaView>
         <ScrollView>
           <View style={styles.container}>
             <Text style={styles.header}>Nutrition</Text>
-
-            <TextInput
-                style={styles.input}
-                placeholder="Enter food title (e.g., Chicken Breast)"
-                value={foodTitle}
-                onChangeText={setFoodTitle}
-            />
-
-            <Button title="Get Nutrition Info" onPress={fetchNutritionData} />
-
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-            {nutritionData ? (
-                <View style={styles.nutritionContainer}>
-                  <Text style={styles.nutritionText}>Calories: {nutritionData.calories.value} {nutritionData.calories.unit}</Text>
-                  <Text style={styles.nutritionText}>Fat: {nutritionData.fat.value} {nutritionData.fat.unit}</Text>
-                  <Text style={styles.nutritionText}>Protein: {nutritionData.protein.value} {nutritionData.protein.unit}</Text>
-                  <Text style={styles.nutritionText}>Carbs: {nutritionData.carbs.value} {nutritionData.carbs.unit}</Text>
-                </View>
-            ) : null}
-
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your daily calories"
-                keyboardType="numeric"
-                value={dailyCalories}
-                onChangeText={setDailyCalories}
-            />
+            <TextInput style={styles.input} placeholder="Enter your daily calories" keyboardType="numeric" value={dailyCalories} onChangeText={setDailyCalories} />
             <Button title="Save Daily Calories" onPress={saveDailyCalories} />
 
             {successMessage ? <Text style={styles.successText}>{successMessage}</Text> : null}
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-            {nutritionData && (
-                <View style={styles.chartContainer}>
-                  <Text style={styles.chartTitle}>Nutritional Breakdown</Text>
-                  <PieChart
-                      data={pieChartData}
-                      width={300}
-                      height={220}
-                      chartConfig={{
-                        backgroundColor: "#e26a00",
-                        backgroundGradientFrom: "#ff6600",
-                        backgroundGradientTo: "#ff6600",
-                        decimalPlaces: 2,
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                          borderRadius: 16,
-                        },
-                      }}
-                      accessor="population"
-                      backgroundColor="transparent"
-                      paddingLeft="15"
-                  />
+
+
+            <TextInput style={styles.input} placeholder="Enter food title" value={foodTitle} onChangeText={setFoodTitle} />
+            <Button title="Get Nutrition Info" onPress={fetchNutritionData} disabled={!isDailyCaloriesSaved} />
+            <Text style={styles.totalCaloriesText}>{isDailyCaloriesSaved ? `Total Calories Left: ${totalCalories} kcal` : null}</Text>
+            {meals.length > 0 && (
+                <View style={styles.mealsContainer}>
+                  <Text style={styles.header}>Meals Added:</Text>
+                  {meals.map((meal, index) => (
+                      <View key={index} style={styles.mealItem}>
+                        <Text style={styles.bullet}>• {meal.title}: {meal.calories} kcal</Text>
+                        <TouchableOpacity onPress={() => removeMeal(index)}>
+                          <Text style={styles.deleteButton}>X</Text>
+                        </TouchableOpacity>
+                      </View>
+                  ))}
                 </View>
             )}
+            {meals.length > 0 && (
+                <View style={styles.chartContainer}>
+                  <Text style={styles.chartTitle}>Nutritional Breakdown</Text>
+                  <PieChart data={pieChartData} width={300} height={220} accessor="population" backgroundColor="transparent" paddingLeft="15" chartConfig={{ backgroundGradientFrom: "#ff6600", backgroundGradientTo: "#ff6600", decimalPlaces: 2, color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})` }} />
+                </View>
+            )}
+
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -202,55 +220,13 @@ export default function NutritionScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f4f4f4",
-    padding: 20,
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-  },
-  nutritionContainer: {
-    width: "100%",
-    backgroundColor: "#e0e0e0",
-    borderRadius: 8,
-    padding: 15,
-    marginTop: 20,
-  },
-  nutritionText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
-    fontSize: 16,
-  },
-  successText: {
-    color: "green",
-    marginBottom: 10,
-    fontSize: 16,
-  },
-  chartContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  chartTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+  container: { flex: 1, backgroundColor: "#f4f4f4", padding: 20, alignItems: "center", justifyContent: "flex-start" },
+  header: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  input: { width: "100%", height: 40, borderColor: "#ccc", borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 20 },
+  totalCaloriesText: { fontSize: 18, fontWeight: "bold", marginVertical: 10 },
+  mealItem: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", paddingVertical: 5 },
+  bullet: { fontSize: 18, textAlign: "left", flex: 1 },
+  deleteButton: { fontSize: 18, color: "red", marginLeft: 10 },
+  errorText: { color: "red", marginBottom: 10, fontSize: 16 },
+  successText: { color: "green", marginBottom: 10, fontSize: 16 }
 });
