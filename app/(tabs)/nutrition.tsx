@@ -79,7 +79,7 @@ export default function NutritionScreen() {
 
     try {
       const response = await axios.post(
-          "http://sd1-backend.onrender.com/api/nutrition/save-nutrition-data",
+          "https://sd1-backend.onrender.com/api/nutrition/save-nutrition-data",
           requestData,
           { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -97,7 +97,7 @@ export default function NutritionScreen() {
     try {
       if (mealToRemove.id) { // Only delete if ID exists
         await axios.delete(
-            `http://sd1-backend.onrender.com/api/nutrition/delete-nutrition-data/${mealToRemove.id}`,
+            `https://sd1-backend.onrender.com/api/nutrition/delete-nutrition-data/${mealToRemove.id}`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
       }
@@ -135,14 +135,14 @@ export default function NutritionScreen() {
 
     console.log(
         "Request URL:",
-        `http://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
+        `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
     );
     console.log("Request Data:", requestData);
     console.log("Headers:", { Authorization: `Bearer ${token}` });
 
     try {
       const response = await axios.post(
-          `http://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
+          `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
           requestData,
           {
             headers: {
