@@ -1,5 +1,4 @@
 import { Slot } from "expo-router";
-import "react-native-reanimated";
 import CustomHeader from "@/components/navigation/CustomHeader";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ActivityIndicator, View } from "react-native";

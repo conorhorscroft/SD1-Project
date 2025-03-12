@@ -3,39 +3,39 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
-import { useAuth } from "@/hooks/useAuth";
+import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function Login() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
 
-  const handleLogin = async () => {
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError("Please enter your email.");
+      return;
+    }
+
     setLoading(true);
     setError("");
+    setMessage("");
 
     try {
       const response = await axios.post(
-        "https://sd1-backend.onrender.com/auth/login",
-        {
-          email,
-          password,
-        }
+        `https://sd1-backend.onrender.com/password/request-reset?email=${email}`
       );
 
       if (response.status === 200) {
-        await login(response.data);
-        router.replace("/(tabs)");
+        setMessage("Password reset link sent! Check your email.");
       }
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("Error sending reset link. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -43,59 +43,36 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <TouchableOpacity
+        style={styles.homebutton}
+        onPress={() => router.replace("/(tabs)")}
+      >
+        <Icon name="home" size={30} color="#1B5E1E" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>Forgot Password</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={handleLogin}
+        onPress={handlePasswordReset}
         disabled={loading}
       >
         <Text style={styles.buttonText}>
-          {loading ? "Logging In..." : "Log In"}
+          {loading ? "Sending..." : "Send Reset Link"}
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/signup")}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/verify")}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>Verify Account</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/forgot-password")}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>Forgot Password?</Text>
-      </TouchableOpacity>
-
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      {message ? <Text style={styles.success}>{message}</Text> : null}
     </View>
   );
 }
@@ -105,9 +82,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 16,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#f5f5f5",
   },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#1B5E1E",
+  },
   input: {
     height: 40,
     borderColor: "gray",
@@ -116,6 +98,17 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
+  success: { color: "green", marginTop: 20, textAlign: "center" },
+  homebutton: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    borderWidth: 2,
+    borderColor: "#1B5E1E",
+    borderRadius: 8,
+    padding: 2,
+    marginBottom: 15,
+    marginRight: 330,
+  },
   button: {
     backgroundColor: "#1B5E1E",
     paddingVertical: 12,
