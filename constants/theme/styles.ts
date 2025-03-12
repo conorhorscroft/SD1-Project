@@ -144,5 +144,14 @@ export const createThemedStyles = (theme: Theme) => {
       flex: 1,
       marginHorizontal: 10,
     },
+    fullWidthButton: {
+      backgroundColor: theme.dark ? theme.colors.buttonBackground : "#FFF",
+      padding: 15,
+      borderRadius: 8,
+      alignItems: "center",
+      marginVertical: 10,
+      width: screenWidth - 32,
+      alignSelf: "center",
+    },
   });
 };
