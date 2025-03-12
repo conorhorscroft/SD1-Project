@@ -18,6 +18,8 @@ import useCalorieTarget from "@/hooks/useCalorieTarget";
 import Slider from "@react-native-community/slider";
 import { Frown, Smile, Moon, Sun, Clock, Eye } from "lucide-react-native";
 import { LogHealthData } from "@/components/LogHealthData";
+import useHealthDataResponse from "@/hooks/useHealthDataResponse";
+import HealthDataResponse from "@/components/HealthDataResponse";
 
 export default function HealthScreen() {
   // Pull healthkit data from useHealthData hook
@@ -41,6 +43,11 @@ export default function HealthScreen() {
   // Pull Calorie Target from hook
   const calorieTarget = useCalorieTarget();
 
+  // Pull healthdata and suggestions from hook
+  const { healthData, suggestions } = useHealthDataResponse();
+  // console.log(healthData);
+  // console.log(suggestions);
+
   return (
     <ScrollView
       style={styles.scrollView}
@@ -48,6 +55,10 @@ export default function HealthScreen() {
     >
       <HealthAdviceSection />
 
+      <HealthDataResponse
+        healthDataResponse={healthData}
+        suggestions={suggestions}
+      />
       <LogHealthData />
 
       <TouchableOpacity
