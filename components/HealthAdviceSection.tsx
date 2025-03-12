@@ -140,6 +140,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin: 10,
     color: "#FFB84D",
+    width: "95%",
+    alignSelf: "center",
   },
   titleLight: {
     fontSize: 20,
