@@ -44,9 +44,11 @@ export default function HealthScreen() {
   const calorieTarget = useCalorieTarget();
 
   // Pull healthdata and suggestions from hook
-  const { healthData, suggestions } = useHealthDataResponse();
-  // console.log(healthData);
-  // console.log(suggestions);
+  const { healthData, suggestions, averages } = useHealthDataResponse();
+
+  // Obtain the latest data log entry
+  const latestEntry =
+    healthData.length > 0 ? healthData[healthData.length - 1] : null;
 
   return (
     <ScrollView
@@ -56,7 +58,12 @@ export default function HealthScreen() {
       <HealthAdviceSection />
 
       <HealthDataResponse
-        healthDataResponse={healthData}
+        logDate={latestEntry.date}
+        mood={latestEntry.mood}
+        sleepHours={latestEntry.hoursOfSleep}
+        screenTime={latestEntry.screenTime}
+        hadFreshAir={latestEntry.timeOutdoors}
+        averages={averages}
         suggestions={suggestions}
       />
       <LogHealthData />

@@ -1,7 +1,13 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { useTheme } from "@/constants/theme/ThemeContext";
 import { createThemedStyles } from "@/constants/theme/styles";
-import { Calendar, BarChart, CheckCircle } from "lucide-react-native";
+import {
+  Calendar,
+  BarChart,
+  CheckCircle,
+  LineChart,
+  Info,
+} from "lucide-react-native";
 
 export const HealthDataResponse = ({
   logDate,
@@ -9,6 +15,8 @@ export const HealthDataResponse = ({
   sleepHours,
   screenTime,
   hadFreshAir,
+  averages = null,
+  suggestions = null,
 }) => {
   const { theme } = useTheme();
   const screenWidth = Dimensions.get("window").width;
@@ -28,66 +36,174 @@ export const HealthDataResponse = ({
       shadowRadius: 4,
       elevation: 2,
     },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.colors.text,
+      marginVertical: 8,
+    },
     row: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
       marginVertical: 5,
     },
     text: {
       fontSize: 16,
       color: theme.colors.text,
+      flex: 1,
     },
     icon: {
       marginRight: 10,
     },
+    divider: {
+      height: 1,
+      backgroundColor: theme.colors.border,
+      marginVertical: 12,
+    },
+    suggestionContainer: {
+      backgroundColor: theme.colors.card,
+      padding: 12,
+      borderRadius: 8,
+      marginTop: 8,
+    },
+    suggestionText: {
+      fontSize: 14,
+      color: theme.colors.text,
+      lineHeight: 20,
+    },
+    averageRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginVertical: 3,
+    },
+    averageLabel: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    averageValue: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: theme.colors.text,
+    },
   });
 
   return (
-    <View style={localStyles.container}>
-      <View style={localStyles.row}>
-        <Calendar
-          color={theme.colors.accent}
-          size={20}
-          style={localStyles.icon}
-        />
-        <Text style={localStyles.text}>Date: {logDate}</Text>
+    <ScrollView>
+      <View style={localStyles.container}>
+        <Text style={localStyles.sectionTitle}>Latest Entry</Text>
+
+        <View style={localStyles.row}>
+          <Calendar
+            color={theme.colors.accent}
+            size={20}
+            style={localStyles.icon}
+          />
+          <Text style={localStyles.text}>Date: {logDate}</Text>
+        </View>
+
+        <View style={localStyles.row}>
+          <BarChart
+            color={theme.colors.accent}
+            size={20}
+            style={localStyles.icon}
+          />
+          <Text style={localStyles.text}>Mood: {mood} / 10</Text>
+        </View>
+
+        <View style={localStyles.row}>
+          <BarChart
+            color={theme.colors.accent}
+            size={20}
+            style={localStyles.icon}
+          />
+          <Text style={localStyles.text}>Sleep: {sleepHours} hours</Text>
+        </View>
+
+        <View style={localStyles.row}>
+          <BarChart
+            color={theme.colors.accent}
+            size={20}
+            style={localStyles.icon}
+          />
+          <Text style={localStyles.text}>Screen Time: {screenTime} hours</Text>
+        </View>
+
+        <View style={localStyles.row}>
+          <CheckCircle
+            color={hadFreshAir ? theme.colors.accent : "#767577"}
+            size={20}
+            style={localStyles.icon}
+          />
+          <Text style={localStyles.text}>
+            Time Outdoors: {hadFreshAir ? "Yes" : "No"}
+          </Text>
+        </View>
+
+        {averages && (
+          <>
+            <View style={localStyles.divider} />
+            <Text style={localStyles.sectionTitle}>Weekly Averages</Text>
+
+            <View style={localStyles.row}>
+              <LineChart
+                color={theme.colors.accent}
+                size={20}
+                style={localStyles.icon}
+              />
+              <View style={{ flex: 1 }}>
+                <View style={localStyles.averageRow}>
+                  <Text style={localStyles.averageLabel}>Average Mood:</Text>
+                  <Text style={localStyles.averageValue}>
+                    {averages.mood} / 10
+                  </Text>
+                </View>
+
+                <View style={localStyles.averageRow}>
+                  <Text style={localStyles.averageLabel}>Average Sleep:</Text>
+                  <Text style={localStyles.averageValue}>
+                    {averages.sleep} hours
+                  </Text>
+                </View>
+
+                <View style={localStyles.averageRow}>
+                  <Text style={localStyles.averageLabel}>
+                    Average Screen Time:
+                  </Text>
+                  <Text style={localStyles.averageValue}>
+                    {averages.screenTime} hours
+                  </Text>
+                </View>
+
+                <View style={localStyles.averageRow}>
+                  <Text style={localStyles.averageLabel}>Outdoor Days:</Text>
+                  <Text style={localStyles.averageValue}>
+                    {averages.outdoorsPercentage}%
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+
+        {suggestions && (
+          <>
+            <View style={localStyles.divider} />
+            <Text style={localStyles.sectionTitle}>Weekly Insights</Text>
+
+            <View style={localStyles.row}>
+              <Info
+                color={theme.colors.accent}
+                size={20}
+                style={localStyles.icon}
+              />
+              <View style={localStyles.suggestionContainer}>
+                <Text style={localStyles.suggestionText}>{suggestions}</Text>
+              </View>
+            </View>
+          </>
+        )}
       </View>
-      <View style={localStyles.row}>
-        <BarChart
-          color={theme.colors.accent}
-          size={20}
-          style={localStyles.icon}
-        />
-        <Text style={localStyles.text}>Mood: {mood} / 10</Text>
-      </View>
-      <View style={localStyles.row}>
-        <BarChart
-          color={theme.colors.accent}
-          size={20}
-          style={localStyles.icon}
-        />
-        <Text style={localStyles.text}>Sleep: {sleepHours} hours</Text>
-      </View>
-      <View style={localStyles.row}>
-        <BarChart
-          color={theme.colors.accent}
-          size={20}
-          style={localStyles.icon}
-        />
-        <Text style={localStyles.text}>Screen Time: {screenTime} hours</Text>
-      </View>
-      <View style={localStyles.row}>
-        <CheckCircle
-          color={hadFreshAir ? theme.colors.accent : "#767577"}
-          size={20}
-          style={localStyles.icon}
-        />
-        <Text style={localStyles.text}>
-          Time Outdoors: {hadFreshAir ? "Yes" : "No"}
-        </Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 

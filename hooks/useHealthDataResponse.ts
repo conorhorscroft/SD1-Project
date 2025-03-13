@@ -12,16 +12,28 @@ interface HealthDataResponseItem {
   timeOutdoors: boolean;
 }
 
-// Define the hook return type
+// Define the hook return type with averages
 interface UseHealthDataResponse {
   healthData: HealthDataResponseItem[];
   suggestions: string;
+  averages: {
+    mood: string;
+    sleep: string;
+    screenTime: string;
+    outdoorsPercentage: string;
+  };
 }
 
 const useHealthDataResponse = (): UseHealthDataResponse => {
   const { token, user } = useAuth();
   const [healthData, setHealthData] = useState<HealthDataResponseItem[]>([]);
   const [suggestions, setSuggestions] = useState<string>("");
+  const [averages, setAverages] = useState({
+    mood: "0",
+    sleep: "0",
+    screenTime: "0",
+    outdoorsPercentage: "0",
+  });
 
   useEffect(() => {
     if (user?.id && token) {
@@ -69,6 +81,14 @@ const useHealthDataResponse = (): UseHealthDataResponse => {
     const avgScreenTime = (totalScreenTime / data.length).toFixed(1);
     const outdoorsPercentage = ((totalOutdoors / data.length) * 100).toFixed(1);
 
+    // Save the averages
+    setAverages({
+      mood: avgMood,
+      sleep: avgSleep,
+      screenTime: avgScreenTime,
+      outdoorsPercentage: outdoorsPercentage,
+    });
+
     generateSuggestions(avgMood, avgSleep, avgScreenTime, outdoorsPercentage);
   };
 
@@ -101,6 +121,11 @@ const useHealthDataResponse = (): UseHealthDataResponse => {
         "You're spending less time outdoors. Fresh air and sunlight can improve mood and energy."
       );
     }
+    if (parseFloat(avgMood) > 5) {
+      newSuggestions.push(
+        "You've been in a great mood recently! Your hardwork is paying off."
+      );
+    }
 
     if (parseFloat(avgMood) < 5) {
       newSuggestions.push(
@@ -115,7 +140,10 @@ const useHealthDataResponse = (): UseHealthDataResponse => {
     );
   };
 
-  return { healthData, suggestions };
+  //   console.log(healthData);
+  //   console.log(suggestions);
+
+  return { healthData, suggestions, averages };
 };
 
 export default useHealthDataResponse;
