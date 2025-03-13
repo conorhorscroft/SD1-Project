@@ -9,15 +9,30 @@ import {
   Info,
 } from "lucide-react-native";
 
+interface HealthDataResponseProps {
+  logDate?: string;
+  mood?: number;
+  sleepHours?: number;
+  screenTime?: number;
+  hadFreshAir?: boolean;
+  averages?: {
+    mood: string;
+    sleep: string;
+    screenTime: string;
+    outdoorsPercentage: string;
+  } | null;
+  suggestions?: string | null;
+}
+
 export const HealthDataResponse = ({
-  logDate,
-  mood,
-  sleepHours,
-  screenTime,
-  hadFreshAir,
+  logDate = "No date",
+  mood = 0,
+  sleepHours = 0,
+  screenTime = 0,
+  hadFreshAir = false,
   averages = null,
   suggestions = null,
-}) => {
+}: HealthDataResponseProps) => {
   const { theme } = useTheme();
   const screenWidth = Dimensions.get("window").width;
   const styles = createThemedStyles(theme);
@@ -90,7 +105,7 @@ export const HealthDataResponse = ({
   return (
     <ScrollView>
       <View style={localStyles.container}>
-        <Text style={localStyles.sectionTitle}>Latest Entry</Text>
+        <Text style={localStyles.sectionTitle}>Latest Health Log Entry</Text>
 
         <View style={localStyles.row}>
           <Calendar

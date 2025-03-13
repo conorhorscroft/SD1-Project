@@ -123,7 +123,7 @@ const useHealthDataResponse = (): UseHealthDataResponse => {
     }
     if (parseFloat(avgMood) > 5) {
       newSuggestions.push(
-        "You've been in a great mood recently! Your hardwork is paying off."
+        "You've been in a great mood recently! Your healthy lifestyle is paying off."
       );
     }
 

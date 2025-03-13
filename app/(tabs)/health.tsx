@@ -58,11 +58,11 @@ export default function HealthScreen() {
       <HealthAdviceSection />
 
       <HealthDataResponse
-        logDate={latestEntry.date}
-        mood={latestEntry.mood}
-        sleepHours={latestEntry.hoursOfSleep}
-        screenTime={latestEntry.screenTime}
-        hadFreshAir={latestEntry.timeOutdoors}
+        logDate={latestEntry?.date}
+        mood={latestEntry?.mood}
+        sleepHours={latestEntry?.hoursOfSleep}
+        screenTime={latestEntry?.screenTime}
+        hadFreshAir={latestEntry?.timeOutdoors}
         averages={averages}
         suggestions={suggestions}
       />
@@ -118,6 +118,10 @@ export default function HealthScreen() {
             )} Kcal\n(Target: ${calorieTarget})`}
           </Text>
         </View>
+        <Text style={styles.subtitle}>
+          Your Calorie target is dynamically calculated based on your calculated
+          BMR (Basal Metabolic Rate) and your fitness goals!
+        </Text>
 
         <Text style={styles.chartTitle}>Daily Steps</Text>
         <View style={styles.chartWrapper}>

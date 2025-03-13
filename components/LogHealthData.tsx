@@ -171,7 +171,7 @@ export const LogHealthData = () => {
       >
         <View style={styles.toggleButtonContent}>
           <Text style={stylesMain.buttonText}>
-            {isHealthLogVisible ? "Hide" : "Log"} Health Data
+            {isHealthLogVisible ? "Hide Health Data Log" : "Log Health Data"}{" "}
           </Text>
           {isHealthLogVisible ? (
             <ChevronUp color={theme.colors.text} size={20} />
