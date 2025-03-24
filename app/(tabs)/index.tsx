@@ -1,19 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  Alert,
-} from "react-native";
-import { LineChart, ProgressChart } from "react-native-chart-kit";
-import { useAuth } from "@/hooks/useAuth";
-import { useFocusEffect } from "@react-navigation/native";
-import GoalsRadarChart from "@/components/GoalsRadarChart";
+import React, { useState, useCallback } from "react";
+import { View, Text, Dimensions, ScrollView } from "react-native"; // React Native UI components
+import { LineChart, ProgressChart } from "react-native-chart-kit"; // Charting library
+import { useAuth } from "@/hooks/useAuth"; // Authentication hook to fetch user data
+import { useFocusEffect } from "@react-navigation/native"; // Hook to refresh screen
+import GoalsRadarChart from "@/components/GoalsRadarChart"; // Radar chart library
+import { useTheme } from "@/constants/theme/ThemeContext"; // Global theme context (for dark and light mode)
+import { createThemedStyles } from "@/constants/theme/styles"; // Global styling based on theme
+import { createChartConfig } from "@/constants/theme/chartConfig"; // Chart configurations
 
-const screenWidth = Dimensions.get("window").width;
-
+// Placeholder data for charts
 const data = {
   labels: ["Swim", "Bike", "Run"],
   data: [0.4, 0.6, 0.8],
@@ -31,105 +26,68 @@ const dataTwo = {
   legend: ["Number of Workouts per week"],
 };
 
-const chartConfig = {
-  backgroundGradientFrom: "#0a3d2e",
-  backgroundGradientFromOpacity: 0.5,
-  backgroundGradientTo: "#2E7D32",
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  strokeWidth: 3,
-  barPercentage: 0.7,
-};
-
 export default function HomeScreen() {
-  const { user, fetchUser } = useAuth();
-  const [refresh, setRefresh] = useState(false);
+  // Get screenwidth for device based resizing
+  const screenWidth = Dimensions.get("window").width;
 
+  // Pull profile data from context
+  const { user, fetchUser } = useAuth();
+
+  // Theme variables
+  const { theme, toggleTheme } = useTheme();
+  const styles = createThemedStyles(theme);
+  const chartConfig = createChartConfig(theme);
+
+  // Dynamically refresh when screen is in focus
+  const [refresh, setRefresh] = useState(false);
   useFocusEffect(
     useCallback(() => {
-      fetchUser(); // Trigger re-fresh
+      fetchUser();
     }, [])
   );
 
   return (
-    <ScrollView key={refresh ? "refresh-true" : "refresh-false"}>
-      <View style={styles.container}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+      key={refresh ? "refresh-true" : "refresh-false"}
+    >
+      <View style={styles.scrollViewContent}>
+        <Text style={styles.title}></Text>
         <Text style={styles.title}>Hello {user?.name},</Text>
-        <Text style={styles.title}>Welcome to SlainteFit!</Text>
+        <Text style={styles.title}>Welcome to SláinteFit!</Text>
         <View style={styles.chartContainer}>
           <GoalsRadarChart />
+          <Text style={styles.chartLabel}>Your Fitness Goals</Text>
           <View style={styles.chartContainer}>
-            <ProgressChart
-              data={data}
-              width={screenWidth}
-              height={220}
-              strokeWidth={16}
-              radius={32}
-              chartConfig={chartConfig}
-              hideLegend={false}
-            />
-          </View>
+            <View style={styles.chartWrapper}>
+              <ProgressChart
+                data={data}
+                width={screenWidth}
+                height={220}
+                strokeWidth={16}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={false}
+              />
+            </View>
 
-          <Text style={styles.chartLabel}>Progress Chart</Text>
+            <Text style={styles.chartLabel}>Progress Chart</Text>
 
-          <View style={styles.chartContainer}>
-            <LineChart
-              data={dataTwo}
-              width={screenWidth}
-              height={275}
-              verticalLabelRotation={30}
-              chartConfig={chartConfig}
-              bezier
-            />
+            <View style={styles.chartWrapper}>
+              <LineChart
+                data={dataTwo}
+                width={screenWidth}
+                height={275}
+                verticalLabelRotation={30}
+                chartConfig={chartConfig}
+                bezier
+              />
+            </View>
+            <Text style={styles.chartLabel}>Monthly Exercise</Text>
           </View>
-          <Text style={styles.chartLabel}>Monthly Exercise</Text>
         </View>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 0,
-    justifyContent: "flex-start",
-    backgroundColor: "#2E7D32",
-    borderRadius: 0,
-    paddingTop: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-    color: "#FFB84D",
-  },
-  profileButton: {
-    position: "absolute",
-    right: 30,
-    zIndex: 10,
-  },
-  chartLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#FFB84D",
-    textAlign: "center",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-
-  chartContainer: {
-    backgroundColor: "#2E7D32",
-    padding: 0,
-    borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    alignItems: "center",
-    overflow: "hidden",
-    paddingTop: 0,
-  },
-});

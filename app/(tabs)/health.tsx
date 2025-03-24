@@ -3,43 +3,75 @@ import {
   ScrollView,
   View,
   Text,
-  StyleSheet,
   Dimensions,
-  Button,
   TouchableOpacity,
-} from "react-native";
-import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
-import useHealthData from "@/hooks/useHealthData";
-import { HealthAdviceSection } from "@/components/HealthAdviceSection";
-import { WebView } from "react-native-webview";
+} from "react-native"; // React Native UI components
+import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit"; // Charting library
+import useHealthData from "@/hooks/useHealthData"; // Hook for pulling apple healthkit data
+import { HealthAdviceSection } from "@/components/HealthAdviceSection"; // Component for AI generated health advice
+import { WebView } from "react-native-webview"; // Library to display webpage within app
+import { useTheme } from "@/constants/theme/ThemeContext"; // Global theme context
+import { createThemedStyles } from "@/constants/theme/styles"; // Theme styles
+import { createChartConfig } from "@/constants/theme/chartConfig"; // Display details for charting
+import useCalorieTarget from "@/hooks/useCalorieTarget"; // Dynamic calorie target hook
+import { LogHealthData } from "@/components/LogHealthData"; // Component to log health data
+import useHealthDataResponse from "@/hooks/useHealthDataResponse"; // Hook to pull health data from backend and process data
+import HealthDataResponse from "@/components/HealthDataResponse"; // Component to display health data information
 
-const screenWidth = Dimensions.get("window").width;
-
-const chartConfig = {
-  backgroundGradientFrom: "#0a3d2e",
-  backgroundGradientFromOpacity: 0.5,
-  backgroundGradientTo: "#2E7D32",
-  backgroundGradientToOpacity: 0.5,
-  color: (opacity = 1) => `rgba(255, 184, 77, ${opacity})`,
-  strokeWidth: 6,
-  barPercentage: 0.4,
-  useShadowColorFromDataset: false,
-  decimalPlaces: 0,
-};
-
+// Page to show and enter health information for a user
 export default function HealthScreen() {
+  // Pull healthkit data from useHealthData hook
   const { loading, energy, stepsData, chartLabels, distanceData } =
     useHealthData();
+
+  // Variable for hiding and closing health advice section
   const [isVisible, setIsVisible] = useState(false);
 
+  // Function to toggle visibility
   const toggleVisibility = () => {
     setIsVisible((prevState) => !prevState);
   };
 
+  // Set screenwidth based on device size
+  const screenWidth = Dimensions.get("window").width;
+
+  // Theme variables
+  const { theme, toggleTheme } = useTheme();
+  const styles = createThemedStyles(theme);
+  const chartConfig = createChartConfig(theme);
+
+  // Pull Calorie Target from hook
+  const calorieTarget = useCalorieTarget();
+
+  // Pull healthdata and suggestions from hook
+  const { healthData, suggestions, averages } = useHealthDataResponse();
+
+  // Obtain the latest data log entry
+  const latestEntry =
+    healthData.length > 0 ? healthData[healthData.length - 1] : null;
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollViewContent}
+    >
+      {/** Personalised AI advice section */}
       <HealthAdviceSection />
 
+      {/** Users latest health data with averages and suggestions */}
+      <HealthDataResponse
+        logDate={latestEntry?.date}
+        mood={latestEntry?.mood}
+        sleepHours={latestEntry?.hoursOfSleep}
+        screenTime={latestEntry?.screenTime}
+        hadFreshAir={latestEntry?.timeOutdoors}
+        averages={averages}
+        suggestions={suggestions}
+      />
+      {/** Allow users to log more health data */}
+      <LogHealthData />
+
+      {/** Mindfullness / breathing section */}
       <TouchableOpacity
         style={styles.button}
         onPress={toggleVisibility}
@@ -69,10 +101,15 @@ export default function HealthScreen() {
           </View>
         </View>
       )}
+
+      {/** Charting of applehealthkit data */}
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <ProgressChart
-            data={{ labels: ["Energy burned"], data: [energy / 2500] }} // TODO: Update this with calorie goal dynamically pulled from profile
+            data={{
+              labels: ["Energy burned"],
+              data: [energy / calorieTarget || 0],
+            }}
             width={screenWidth - 100}
             height={200}
             strokeWidth={18}
@@ -80,10 +117,18 @@ export default function HealthScreen() {
             chartConfig={chartConfig}
             hideLegend={true}
           />
+
+          {/** Dynamically calculated Calorie target */}
           <Text style={styles.chartLabel}>
-            {`Energy Burned\n${Math.round(energy)} Kcal`}
+            {`Energy Burned\n${Math.round(
+              energy
+            )} Kcal\n(Target: ${calorieTarget})`}
           </Text>
         </View>
+        <Text style={styles.subtitle}>
+          Your Calorie target is dynamically calculated based on your calculated
+          BMR (Basal Metabolic Rate) and your fitness goals!
+        </Text>
 
         <Text style={styles.chartTitle}>Daily Steps</Text>
         <View style={styles.chartWrapper}>
@@ -124,79 +169,3 @@ export default function HealthScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#2E7D32",
-  },
-  chartContainer: {
-    padding: 10,
-    alignItems: "center",
-  },
-  chartWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    overflow: "hidden",
-    marginVertical: 10,
-  },
-  chartLabel: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFB84D",
-    textAlign: "center",
-    marginRight: 50,
-    marginLeft: -80,
-  },
-  chartTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFB84D",
-    textAlign: "center",
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "#FFB84D",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#FFB84D",
-    marginBottom: 20,
-  },
-  webviewContainer: {
-    width: "100%",
-    height: 380,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  webview: {
-    flex: 1,
-    marginBottom: -80,
-  },
-  exerciseSection: {
-    width: "100%",
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: "rgb(27, 94, 30)",
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 15,
-    width: "95%",
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  buttonText: {
-    color: "#FFB84D",
-    fontSize: 16,
-    textAlign: "center",
-  },
-});

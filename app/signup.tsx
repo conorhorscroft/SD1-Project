@@ -1,42 +1,58 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; // React and state management
 import {
   View,
   TextInput,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
-} from "react-native";
-import Slider from "@react-native-community/slider";
-import axios from "axios";
-import { useRouter } from "expo-router";
+  TouchableOpacity,
+} from "react-native"; // React Native UI components
+import Slider from "@react-native-community/slider"; // Slider component
+import axios from "axios"; // For HTTP requests to backend API
+import { useRouter } from "expo-router"; // For navigation
 
+// Sign-up page to register new users
 export default function SignUp() {
   const router = useRouter();
+  // Set state variables for all parameters required
+
+  // User details
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState(18);
+
+  // Physical attributes
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [age, setAge] = useState(18);
+
+  // Fitness goals
   const [experience, setExperience] = useState(1);
   const [strength, setStrength] = useState(1);
   const [endurance, setEndurance] = useState(1);
   const [weightLoss, setWeightLoss] = useState(1);
   const [health, setHealth] = useState(1);
   const [hoursAvailable, setHoursAvailable] = useState(1);
+
+  // Password
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Function to handle user sign-up
   const handleSave = async () => {
+    // Confirm all fields have information entered
     if (
       !name ||
       !email ||
       !phone ||
       !weight ||
       !height ||
+      !gender ||
       !age ||
       !experience ||
       !strength ||
@@ -47,18 +63,22 @@ export default function SignUp() {
       !password ||
       !confirmPassword
     ) {
+      // Flag error if not
       setError("All fields are required!");
       return;
     }
 
+    // Confirm passwords match and flag error if not
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
+    // Set loading state to true to indicte request in progress and reset error
     setLoading(true);
     setError("");
 
     try {
+      // Send parameters as POST request to backend API
       const response = await axios.post(
         "https://sd1-backend.onrender.com/auth/signup",
         {
@@ -75,16 +95,20 @@ export default function SignUp() {
           health,
           hoursAvailable,
           password,
+          gender,
         }
       );
 
+      // Alert if successful and navigate to verification page
       if (response.status === 200) {
         alert("Account created successfully!");
         router.push("/verify");
       }
     } catch (err) {
+      // Otherwise report error
       setError("Error creating account. Please try again.");
     } finally {
+      // Reset loading state to false
       setLoading(false);
     }
   };
@@ -94,17 +118,21 @@ export default function SignUp() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
+      {/* Create Profile title */}
       <Text style={styles.title}>Create User Profile</Text>
 
+      {/* Inputs for user details */}
       <TextInput
         style={styles.input}
         placeholder="Name"
+        placeholderTextColor={"#888"}
         value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor={"#888"}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -113,13 +141,16 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Phone"
+        placeholderTextColor={"#888"}
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
+
       <TextInput
         style={styles.input}
         placeholder="Weight (kg)"
+        placeholderTextColor={"#888"}
         value={weight}
         onChangeText={setWeight}
         keyboardType="numeric"
@@ -127,11 +158,56 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Height (cm)"
+        placeholderTextColor={"#888"}
         value={height}
         onChangeText={setHeight}
         keyboardType="numeric"
       />
 
+      {/* Gender selection */}
+
+      <View style={styles.container}>
+        <Text style={styles.label}>Select Gender:</Text>
+
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={[styles.option, gender === "Male" && styles.selectedOption]}
+            onPress={() => setGender("Male")}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                gender === "Male" && styles.selectedOptionText,
+              ]}
+            >
+              Male
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.option,
+              gender === "Female" && styles.selectedOption,
+            ]}
+            onPress={() => setGender("Female")}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                gender === "Female" && styles.selectedOptionText,
+              ]}
+            >
+              Female
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {gender ? (
+          <Text style={styles.selectedText}>Selected: {gender}</Text>
+        ) : null}
+      </View>
+
+      {/* Fitness goal sliders */}
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>Age: {age}</Text>
         <Slider
@@ -217,9 +293,11 @@ export default function SignUp() {
         />
       </View>
 
+      {/* Password fields */}
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor={"#888"}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -227,23 +305,29 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
+        placeholderTextColor={"#888"}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
 
-      <View style={styles.buttonContainer}>
-        <Button
-          title={loading ? "Signing Up..." : "Sign Up!"}
-          onPress={handleSave}
-          disabled={loading}
-        />
-        <View style={styles.buttonSpacing} />
-        <Button
-          title="Back to Sign in"
-          onPress={() => router.push("/signin")}
-        />
-      </View>
+      {/* Sign-up button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSave}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Signing Up..." : "Sign Up!"}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/signin")}
+      >
+        <Text style={styles.buttonText}>Back to Sign in</Text>
+      </TouchableOpacity>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </ScrollView>
@@ -301,15 +385,54 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 15,
   },
-  buttonContainer: {
-    marginTop: 20,
-  },
-  buttonSpacing: {
-    height: 10,
-  },
   error: {
     color: "red",
     marginTop: 20,
     textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  optionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  option: {
+    flex: 1,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    marginHorizontal: 4,
+    alignItems: "center",
+  },
+  selectedOption: {
+    backgroundColor: "#1B5E1E",
+    borderColor: "#1B5E1E",
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  selectedOptionText: {
+    color: "white",
+  },
+  selectedText: {
+    marginTop: 16,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#1B5E1E",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

@@ -37,6 +37,7 @@ export default function UpdateProfile() {
     weight: user?.weight?.toString() || "",
     height: user?.height?.toString() || "",
     age: user?.age?.toString() || "",
+    gender: user?.gender || "",
     experience: user?.experience || 0,
     strength: user?.strength || 0,
     endurance: user?.endurance || 0,
@@ -167,6 +168,19 @@ export default function UpdateProfile() {
                 keyboardType="numeric"
               />
               <Text style={styles.unit}>cm</Text>
+            </View>
+
+            <View style={styles.inputRow}>
+              <User size={20} color="#4A90E2" />
+              <Text style={styles.label}>Gender:</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.gender}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, gender: text })
+                }
+                placeholder="Enter your gender"
+              />
             </View>
 
             <View style={styles.inputRow}>
@@ -417,17 +431,17 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1B5E1E",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 20,
-    width: "90%",
+    marginRight: 20,
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
   },
   homebutton: {

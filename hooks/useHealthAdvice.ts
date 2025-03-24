@@ -21,7 +21,7 @@ export class HealthAdvisor {
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = this.genAI.getGenerativeModel({
       // best text model
-      model: "gemini-pro",
+      model: "gemini-1.5-pro",
       // safety settings to prevent inappropriate content
       safetySettings: [
         {
@@ -52,6 +52,12 @@ export class HealthAdvisor {
       weight?: number;
       height?: number;
       experience?: number;
+      strength?: number;
+      endurance?: number;
+      weightLoss?: number;
+      health?: number;
+      gender?: string;
+      hoursAvailable?: number;
     },
     concernOrGoal: string
     // returns our health advice response interface
@@ -70,17 +76,24 @@ export class HealthAdvisor {
   ${user.age ? `- Age: ${user.age} years` : ""}
   ${user.weight ? `- Weight: ${user.weight} kg` : ""}
   ${user.height ? `- Height: ${user.height} cm` : ""}
+  ${user.gender ? `- Gender: ${user.gender}` : ""}
   ${bmi ? `- BMI: ${bmi}` : ""}
   ${
     user.experience
       ? `- Fitness Experience Level out of 10: ${user.experience}`
       : ""
   }
+  ${`- Their respective goals for these categories out of 10 are as follows; Strength: ${user.health}, Endurance: ${user.endurance}, Weight Loss: ${user.weightLoss}, General Health: ${user.health}`}
+  ${
+    user.hoursAvailable
+      ? `- They have ${user.hoursAvailable} hours available to train per week`
+      : ""
+  }
 
   They are seeking advice about: ${concernOrGoal}
 
  Please provide your response in markdown format with the following structure:
-1. Make reference to the details provided for the user profile
+1. Make general reference to the details provided for the user profile (don't mention specific numbers)
 2. Start with main recommendations organized under clear headings using **bold** text
 3. Use bullet points (-) for individual recommendations
 4. End with a disclaimer section
@@ -93,28 +106,9 @@ Keep the advice specific and actionable.`;
       // API call and response handling
       const result = await this.model.generateContent(prompt);
       const response = result.response;
-      let text = response.text(); // returns a string formatted like JSON
-      // text = text
-      //   .replace(/^```json/, "")
-      //   .replace(/```$/, "")
-      //   .trim();
-      // console.log("Text prior to parsing: ", text);
-
-      // // Parse the JSON response
-      // try {
-      //   const jsonResponse = JSON.parse(text);
-      //   console.log("JSON Response:", jsonResponse);
-      //   return {
-      //     advice: jsonResponse.advice,
-      //     disclaimer: jsonResponse.disclaimer,
-      //   };
-      // } catch (parseError) {
-      //   console.log("Unable to parse JSON");
-      //   // If JSON parsing fails, return the raw text with a default disclaimer
+      let text = response.text(); // returns a string
       return {
-        advice:
-          text +
-          "\n\nThis is general wellness information and not medical advice. Always consult healthcare professionals for medical concerns.",
+        advice: text,
       };
       // }
     } catch (error) {
@@ -142,6 +136,12 @@ export function useHealthAdvice() {
           weight: user?.weight,
           height: user?.height,
           experience: user?.experience,
+          strength: user?.strength,
+          endurance: user?.endurance,
+          weightLoss: user?.weightLoss,
+          health: user?.health,
+          gender: user?.gender,
+          hoursAvailable: user?.hoursAvailable,
         },
         concernOrGoal
       );

@@ -3,14 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import axios from "axios";
+import axios from "axios"; // For HTTP requests to backend API
 import { NavigationProp } from "@react-navigation/native";
-import { router } from "expo-router";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { router } from "expo-router"; // Navigation
+import Icon from "react-native-vector-icons/FontAwesome"; // Home screen icone
 
 type RootStackParamList = {
   login: undefined;
@@ -22,21 +21,27 @@ type LoginScreenProps = {
   navigation: NavigationProp<RootStackParamList, "verify">;
 };
 
+// Allows users to verify their account
 export default function Login({ navigation }: LoginScreenProps) {
+  // State variables for email, verification code, and UI state
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Function to handle account verification
   const handleVerification = async () => {
+    // Ensure fields completed
     if (!email || !verificationCode) {
       setError("Please enter your email and verification code.");
       return;
     }
+    // Set loading state to true and reset error
     setLoading(true);
     setError("");
 
     try {
+      // Make POST request with email and verifcation code
       const response = await axios.post(
         "https://sd1-backend.onrender.com/auth/verify",
         {
@@ -62,14 +67,17 @@ export default function Login({ navigation }: LoginScreenProps) {
 
   return (
     <View style={styles.container}>
+      {/* Home Button */}
       <TouchableOpacity
         style={styles.homebutton}
         onPress={() => router.replace("/(tabs)")}
       >
-        <Icon name="home" size={30} color="#000" />
+        <Icon name="home" size={30} color="#1B5E1E" />
       </TouchableOpacity>
+      {/** Title */}
       <Text style={styles.title}>Verify Email</Text>
 
+      {/** Text inputs */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -85,19 +93,34 @@ export default function Login({ navigation }: LoginScreenProps) {
         onChangeText={setVerificationCode}
       />
 
-      <Button
-        title={loading ? "Verifying..." : "Verify"}
+      {/** Verify button */}
+      <TouchableOpacity
+        style={styles.button}
         onPress={handleVerification}
         disabled={loading}
-      />
+      >
+        <Text style={styles.buttonText}>
+          {loading ? "Verifying..." : "Verify"}
+        </Text>
+      </TouchableOpacity>
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#f5f5f5",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#1B5E1E",
+  },
   input: {
     height: 40,
     borderColor: "gray",
@@ -108,12 +131,27 @@ const styles = StyleSheet.create({
   error: { color: "red", marginTop: 20, textAlign: "center" },
   homebutton: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     borderWidth: 2,
-    borderColor: "#000",
+    borderColor: "#1B5E1E",
     borderRadius: 8,
     padding: 2,
     marginBottom: 15,
-    marginRight: 10,
+    marginRight: 330,
+  },
+
+  button: {
+    backgroundColor: "#1B5E1E",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginRight: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

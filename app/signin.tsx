@@ -5,23 +5,29 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-} from "react-native";
-import axios from "axios";
-import { router } from "expo-router";
-import { useAuth } from "@/hooks/useAuth";
+} from "react-native"; // React Native UI components
+import axios from "axios"; // For HTTP GET/POST requests
+import { router } from "expo-router"; // For page navigation
+import { useAuth } from "@/hooks/useAuth"; // Authentication hook
 
+// Log-in page
 export default function Login() {
+  // State variables to store email, password, loading status, and error messages
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Login function from authentication hook
   const { login } = useAuth();
 
+  // function to handle user log-in
   const handleLogin = async () => {
-    setLoading(true);
-    setError("");
+    setLoading(true); // change loading state to true
+    setError(""); // reset error message
 
     try {
+      // send login request with email and password to backend API
       const response = await axios.post(
         "https://sd1-backend.onrender.com/auth/login",
         {
@@ -30,21 +36,26 @@ export default function Login() {
         }
       );
 
+      // If successful, store user data and navigate to the index page
       if (response.status === 200) {
         await login(response.data);
         router.replace("/(tabs)");
       }
     } catch (err) {
+      // If fails, update error message
       setError("Invalid credentials. Please try again.");
     } finally {
+      // reset loading state
       setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Login Title */}
       <Text style={styles.title}>Login</Text>
 
+      {/* Email Input Field */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -53,6 +64,8 @@ export default function Login() {
         keyboardType="email-address"
         autoCapitalize="none"
       />
+
+      {/* Password Input Field */}
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -61,16 +74,19 @@ export default function Login() {
         secureTextEntry
       />
 
+      {/* Login Button */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleLogin}
         disabled={loading}
       >
+        {/* Show loading indicator while logging in */}
         <Text style={styles.buttonText}>
           {loading ? "Logging In..." : "Log In"}
         </Text>
       </TouchableOpacity>
 
+      {/* Navigation Links */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => router.push("/signup")}
@@ -89,19 +105,25 @@ export default function Login() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/forgotpassword")}
+        onPress={() => router.push("/forgot-password")}
         disabled={loading}
       >
         <Text style={styles.buttonText}>Forgot Password?</Text>
       </TouchableOpacity>
 
+      {/* Display error message if login fails */}
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 16 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#F8F9FA",
+  },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
   input: {
     height: 40,
@@ -112,7 +134,7 @@ const styles = StyleSheet.create({
   },
   error: { color: "red", marginTop: 20, textAlign: "center" },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1B5E1E",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
@@ -121,6 +143,8 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

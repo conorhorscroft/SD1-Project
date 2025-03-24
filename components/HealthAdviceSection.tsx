@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { useHealthAdvice } from "@/hooks/useHealthAdvice";
+import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "@/constants/theme/ThemeContext";
+import { Theme } from "@/constants/theme/types";
 
 export const HealthAdviceSection = () => {
   const { getAdvice } = useHealthAdvice();
@@ -17,6 +20,7 @@ export const HealthAdviceSection = () => {
   const [advice, setAdvice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAdviceVisible, setIsAdviceVisible] = useState(true);
+  const { theme } = useTheme();
 
   const fetchAdvice = async () => {
     if (!concernOrGoal.trim()) {
@@ -44,51 +48,109 @@ export const HealthAdviceSection = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Personalised Health {"\n"}& Wellness Advice
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
-        value={concernOrGoal}
-        onChangeText={setConcernOrGoal}
-        placeholderTextColor="#FFB84D"
-      />
+    <>
+      {theme.dark ? ( // Conditional rendering based on theme
+        <LinearGradient
+          colors={["#0a3d2e", "#2E7D32"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.container}
+        >
+          <Text style={styles.titleDark}>
+            Personalised Health {"\n"}& Wellness Advice
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
+            value={concernOrGoal}
+            onChangeText={setConcernOrGoal}
+            placeholderTextColor="#FFB84D"
+          />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={fetchAdvice}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? "Loading..." : "Get Advice"}
-        </Text>
-      </TouchableOpacity>
-
-      {isAdviceVisible && advice && (
-        <View style={styles.adviceContainer}>
-          <Markdown style={markdownStyles}>{advice}</Markdown>
-
-          {/* Close Button */}
-          <TouchableOpacity style={styles.closeButton} onPress={closeAdvice}>
-            <Text style={styles.closeButtonText}>Close</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={fetchAdvice}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? "Loading..." : "Get Advice"}
+            </Text>
           </TouchableOpacity>
+
+          {isAdviceVisible && advice && (
+            <View style={styles.adviceContainer}>
+              <Markdown style={markdownStyles}>{advice}</Markdown>
+
+              {/* Close Button */}
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={closeAdvice}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </LinearGradient>
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.titleLight}>
+            Personalised Health {"\n"}& Wellness Advice
+          </Text>
+          <TextInput
+            style={styles.inputLight}
+            placeholder="e.g., Weight Loss, Muscle Gain, Better Sleep..."
+            value={concernOrGoal}
+            onChangeText={setConcernOrGoal}
+            placeholderTextColor="#0a3d2e"
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={fetchAdvice}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? "Loading..." : "Get Advice"}
+            </Text>
+          </TouchableOpacity>
+
+          {isAdviceVisible && advice && (
+            <View style={styles.adviceContainer}>
+              <Markdown style={markdownStylesTwo}>{advice}</Markdown>
+
+              {/* Close Button */}
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={closeAdvice}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       )}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "rgb(27, 94, 30)",
+    // backgroundColor: "rgb(27, 94, 30)",
     borderRadius: 15,
     margin: 10,
     color: "#FFB84D",
+    width: "95%",
+    alignSelf: "center",
   },
-  title: {
+  titleLight: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#2E7D32",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  titleDark: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFB84D",
@@ -101,6 +163,15 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 15,
     color: "#FFB84D",
+    borderWidth: 1,
+    borderColor: "#FFB84D",
+  },
+  inputLight: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+    color: "#2E7D32",
     borderWidth: 1,
     borderColor: "#FFB84D",
   },
@@ -144,4 +215,12 @@ const markdownStyles = {
   heading2: { color: "#FFB84D" },
   strong: { color: "#FFB84D" },
   bullet_list: { color: "#fff" },
+};
+
+const markdownStylesTwo = {
+  body: { color: "#2E7D32" },
+  heading1: { color: "#2E7D32" },
+  heading2: { color: "#2E7D32" },
+  strong: { color: "rgb(27, 94, 30)" },
+  bullet_list: { color: "#2E7D32" },
 };
