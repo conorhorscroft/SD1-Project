@@ -4,6 +4,7 @@ import AppleHealthKit, {
   HealthValue,
 } from "react-native-health";
 
+// Define permissions required to read data from Apple HealthKit
 const PERMISSIONS = {
   permissions: {
     read: [
@@ -16,6 +17,7 @@ const PERMISSIONS = {
   },
 } as HealthKitPermissions;
 
+// Define structure of health data to be returned
 interface HealthData {
   loading: boolean;
   steps: number;
@@ -28,22 +30,26 @@ interface HealthData {
   refreshData: () => Promise<void>;
 }
 
+// Fetch and manage health data and return as interface above
 function useHealthData(): HealthData {
+  // State variables for storing health data
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
   const [flights, setFlights] = useState<number>(0);
   const [energy, setEnergy] = useState<number>(0);
   const [stepsData, setStepsData] = useState<number[]>(new Array(7).fill(0));
-  const [chartLabels, setChartLabels] = useState<string[]>([]);
+  const [chartLabels, setChartLabels] = useState<string[]>([]); // Labels for chart (days of week)
   const [distanceData, setDistanceData] = useState<number[]>(
     new Array(7).fill(0)
   );
 
+  // Helper function to process weekly data and labels
   const prepareDynamicLabelsAndData = (
     results: Array<any>,
     dataType: "steps" | "distance"
   ) => {
+    // Set labels for last 7 days
     const daysOfWeek = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
     const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
       const d = new Date();
@@ -51,8 +57,10 @@ function useHealthData(): HealthData {
       return d;
     });
 
+    // Initialise array for storing processed data
     const weeklyData = new Array(7).fill(0);
 
+    // Process results and map to each day
     results.forEach(({ startDate, value }) => {
       const date = new Date(startDate);
       const matchingDayIndex = lastSevenDays.findIndex(
@@ -62,14 +70,16 @@ function useHealthData(): HealthData {
 
       if (matchingDayIndex !== -1) {
         weeklyData[matchingDayIndex] +=
-          dataType === "distance" ? Number((value / 1000).toFixed(2)) : value;
+          dataType === "distance" ? Number((value / 1000).toFixed(2)) : value; // Convert from m to km
       }
     });
 
+    // Map last seven days to corresponding label
     const dynamicLabels = lastSevenDays.map((day) => daysOfWeek[day.getDay()]);
     return { labels: dynamicLabels, processedData: weeklyData };
   };
 
+  // Fetch data from HealthKit
   const fetchHealthData = async () => {
     try {
       setLoading(true);
@@ -96,7 +106,7 @@ function useHealthData(): HealthData {
         }
       );
 
-      // Fetch weekly data
+      // Define variable for last 7 days date range
       const options = {
         startDate: new Date(
           new Date().setDate(new Date().getDate() - 6)
@@ -104,6 +114,7 @@ function useHealthData(): HealthData {
         endDate: new Date().toISOString(),
       };
 
+      // Fetch weekly data
       AppleHealthKit.getDailyStepCountSamples(
         options,
         (err: Object, results: Array<Object>) => {
@@ -150,9 +161,10 @@ function useHealthData(): HealthData {
     }
   };
 
+  // Runs when component mounts, initialises HealthKit
   useEffect(() => {
     AppleHealthKit.initHealthKit(PERMISSIONS, (err) => {
-      if (!err) fetchHealthData();
+      if (!err) fetchHealthData(); // If successful, fetch data
     });
   }, []);
 

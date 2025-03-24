@@ -1,39 +1,51 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; // React and state management
 import {
   View,
   TextInput,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
-} from "react-native";
-import Slider from "@react-native-community/slider";
-import axios from "axios";
-import { useRouter } from "expo-router";
-import SelectDropdown from "react-native-select-dropdown";
+} from "react-native"; // React Native UI components
+import Slider from "@react-native-community/slider"; // Slider component
+import axios from "axios"; // For HTTP requests to backend API
+import { useRouter } from "expo-router"; // For navigation
 
+// Sign-up page to register new users
 export default function SignUp() {
   const router = useRouter();
+  // Set state variables for all parameters required
+
+  // User details
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState(18);
+
+  // Physical attributes
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [age, setAge] = useState(18);
+
+  // Fitness goals
   const [experience, setExperience] = useState(1);
   const [strength, setStrength] = useState(1);
   const [endurance, setEndurance] = useState(1);
   const [weightLoss, setWeightLoss] = useState(1);
   const [health, setHealth] = useState(1);
   const [hoursAvailable, setHoursAvailable] = useState(1);
+
+  // Password
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [gender, setGender] = useState("");
 
+  // Function to handle user sign-up
   const handleSave = async () => {
+    // Confirm all fields have information entered
     if (
       !name ||
       !email ||
@@ -51,18 +63,22 @@ export default function SignUp() {
       !password ||
       !confirmPassword
     ) {
+      // Flag error if not
       setError("All fields are required!");
       return;
     }
 
+    // Confirm passwords match and flag error if not
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
+    // Set loading state to true to indicte request in progress and reset error
     setLoading(true);
     setError("");
 
     try {
+      // Send parameters as POST request to backend API
       const response = await axios.post(
         "https://sd1-backend.onrender.com/auth/signup",
         {
@@ -83,13 +99,16 @@ export default function SignUp() {
         }
       );
 
+      // Alert if successful and navigate to verification page
       if (response.status === 200) {
         alert("Account created successfully!");
         router.push("/verify");
       }
     } catch (err) {
+      // Otherwise report error
       setError("Error creating account. Please try again.");
     } finally {
+      // Reset loading state to false
       setLoading(false);
     }
   };
@@ -99,8 +118,10 @@ export default function SignUp() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
+      {/* Create Profile title */}
       <Text style={styles.title}>Create User Profile</Text>
 
+      {/* Inputs for user details */}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -143,6 +164,8 @@ export default function SignUp() {
         keyboardType="numeric"
       />
 
+      {/* Gender selection */}
+
       <View style={styles.container}>
         <Text style={styles.label}>Select Gender:</Text>
 
@@ -184,6 +207,7 @@ export default function SignUp() {
         ) : null}
       </View>
 
+      {/* Fitness goal sliders */}
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>Age: {age}</Text>
         <Slider
@@ -269,6 +293,7 @@ export default function SignUp() {
         />
       </View>
 
+      {/* Password fields */}
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -286,6 +311,7 @@ export default function SignUp() {
         secureTextEntry
       />
 
+      {/* Sign-up button */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleSave}

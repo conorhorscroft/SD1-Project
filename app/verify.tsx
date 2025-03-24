@@ -3,14 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import axios from "axios";
+import axios from "axios"; // For HTTP requests to backend API
 import { NavigationProp } from "@react-navigation/native";
-import { router } from "expo-router";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { router } from "expo-router"; // Navigation
+import Icon from "react-native-vector-icons/FontAwesome"; // Home screen icone
 
 type RootStackParamList = {
   login: undefined;
@@ -22,21 +21,27 @@ type LoginScreenProps = {
   navigation: NavigationProp<RootStackParamList, "verify">;
 };
 
+// Allows users to verify their account
 export default function Login({ navigation }: LoginScreenProps) {
+  // State variables for email, verification code, and UI state
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Function to handle account verification
   const handleVerification = async () => {
+    // Ensure fields completed
     if (!email || !verificationCode) {
       setError("Please enter your email and verification code.");
       return;
     }
+    // Set loading state to true and reset error
     setLoading(true);
     setError("");
 
     try {
+      // Make POST request with email and verifcation code
       const response = await axios.post(
         "https://sd1-backend.onrender.com/auth/verify",
         {
@@ -62,14 +67,17 @@ export default function Login({ navigation }: LoginScreenProps) {
 
   return (
     <View style={styles.container}>
+      {/* Home Button */}
       <TouchableOpacity
         style={styles.homebutton}
         onPress={() => router.replace("/(tabs)")}
       >
         <Icon name="home" size={30} color="#1B5E1E" />
       </TouchableOpacity>
+      {/** Title */}
       <Text style={styles.title}>Verify Email</Text>
 
+      {/** Text inputs */}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -85,6 +93,7 @@ export default function Login({ navigation }: LoginScreenProps) {
         onChangeText={setVerificationCode}
       />
 
+      {/** Verify button */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleVerification}

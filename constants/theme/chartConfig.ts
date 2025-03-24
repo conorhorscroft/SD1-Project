@@ -1,5 +1,7 @@
 import { Theme } from "./types";
 
+// Defines chart configuration that adapts based on the theme
+
 export const createChartConfig = (theme: Theme) => ({
   backgroundGradientFrom: theme.dark
     ? "#0a3d2e" // Dark mode

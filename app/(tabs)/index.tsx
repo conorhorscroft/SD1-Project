@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Dimensions, ScrollView } from "react-native";
-import { LineChart, ProgressChart } from "react-native-chart-kit";
-import { useAuth } from "@/hooks/useAuth";
-import { useFocusEffect } from "@react-navigation/native";
-import GoalsRadarChart from "@/components/GoalsRadarChart";
-import { useTheme } from "@/constants/theme/ThemeContext";
-import { createThemedStyles } from "@/constants/theme/styles";
-import { createChartConfig } from "@/constants/theme/chartConfig";
+import { View, Text, Dimensions, ScrollView } from "react-native"; // React Native UI components
+import { LineChart, ProgressChart } from "react-native-chart-kit"; // Charting library
+import { useAuth } from "@/hooks/useAuth"; // Authentication hook to fetch user data
+import { useFocusEffect } from "@react-navigation/native"; // Hook to refresh screen
+import GoalsRadarChart from "@/components/GoalsRadarChart"; // Radar chart library
+import { useTheme } from "@/constants/theme/ThemeContext"; // Global theme context (for dark and light mode)
+import { createThemedStyles } from "@/constants/theme/styles"; // Global styling based on theme
+import { createChartConfig } from "@/constants/theme/chartConfig"; // Chart configurations
 
 // Placeholder data for charts
 const data = {
@@ -38,7 +38,7 @@ export default function HomeScreen() {
   const styles = createThemedStyles(theme);
   const chartConfig = createChartConfig(theme);
 
-  // Dynamically refresh
+  // Dynamically refresh when screen is in focus
   const [refresh, setRefresh] = useState(false);
   useFocusEffect(
     useCallback(() => {

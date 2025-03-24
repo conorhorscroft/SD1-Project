@@ -1,5 +1,7 @@
 import { Theme } from "./types";
 
+// Define light and dark theme objects
+
 export const lightTheme: Theme = {
   name: "light",
   dark: false,

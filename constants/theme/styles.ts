@@ -1,7 +1,7 @@
-// theme/styles.ts
 import { StyleSheet, Dimensions } from "react-native";
 import { Theme } from "./types";
 
+// Define theme-aware styles using stylesheets
 export const createThemedStyles = (theme: Theme) => {
   const screenWidth = Dimensions.get("window").width;
 

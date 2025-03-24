@@ -3,6 +3,9 @@ import { useColorScheme } from "react-native";
 import { Theme } from "./types";
 import { lightTheme, darkTheme } from "./themes";
 
+// Defines a React Context to manage and provide the app's theme
+
+// Defines the structure of the context
 type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
@@ -11,6 +14,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Initialises the theme mode based on device settings
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {

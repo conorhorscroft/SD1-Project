@@ -1,22 +1,23 @@
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router"; // Navigation
 import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth"; // Authentication hook
 
 export default function TabLayout() {
   const { token, isLoading } = useAuth();
 
-  // Show loading indicator while checking authentication
+  // Show nothing while checking authentication
   if (isLoading) {
     return null;
   }
 
-  // Redirect to sign in if not authenticated
+  // Redirect to sign-in page if user is not authenticated (cannot access main app)
   if (!token) {
     return <Redirect href="/signin" />;
   }
 
   return (
+    // Tabs for main screen
     <Tabs
       screenOptions={{
         tabBarStyle: {

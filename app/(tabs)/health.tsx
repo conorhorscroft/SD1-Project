@@ -5,22 +5,20 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  Switch,
-} from "react-native";
-import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit";
-import useHealthData from "@/hooks/useHealthData";
-import { HealthAdviceSection } from "@/components/HealthAdviceSection";
-import { WebView } from "react-native-webview";
-import { useTheme } from "@/constants/theme/ThemeContext";
-import { createThemedStyles } from "@/constants/theme/styles";
-import { createChartConfig } from "@/constants/theme/chartConfig";
-import useCalorieTarget from "@/hooks/useCalorieTarget";
-import Slider from "@react-native-community/slider";
-import { Frown, Smile, Moon, Sun, Clock, Eye } from "lucide-react-native";
-import { LogHealthData } from "@/components/LogHealthData";
-import useHealthDataResponse from "@/hooks/useHealthDataResponse";
-import HealthDataResponse from "@/components/HealthDataResponse";
+} from "react-native"; // React Native UI components
+import { LineChart, BarChart, ProgressChart } from "react-native-chart-kit"; // Charting library
+import useHealthData from "@/hooks/useHealthData"; // Hook for pulling apple healthkit data
+import { HealthAdviceSection } from "@/components/HealthAdviceSection"; // Component for AI generated health advice
+import { WebView } from "react-native-webview"; // Library to display webpage within app
+import { useTheme } from "@/constants/theme/ThemeContext"; // Global theme context
+import { createThemedStyles } from "@/constants/theme/styles"; // Theme styles
+import { createChartConfig } from "@/constants/theme/chartConfig"; // Display details for charting
+import useCalorieTarget from "@/hooks/useCalorieTarget"; // Dynamic calorie target hook
+import { LogHealthData } from "@/components/LogHealthData"; // Component to log health data
+import useHealthDataResponse from "@/hooks/useHealthDataResponse"; // Hook to pull health data from backend and process data
+import HealthDataResponse from "@/components/HealthDataResponse"; // Component to display health data information
 
+// Page to show and enter health information for a user
 export default function HealthScreen() {
   // Pull healthkit data from useHealthData hook
   const { loading, energy, stepsData, chartLabels, distanceData } =
@@ -29,10 +27,12 @@ export default function HealthScreen() {
   // Variable for hiding and closing health advice section
   const [isVisible, setIsVisible] = useState(false);
 
+  // Function to toggle visibility
   const toggleVisibility = () => {
     setIsVisible((prevState) => !prevState);
   };
 
+  // Set screenwidth based on device size
   const screenWidth = Dimensions.get("window").width;
 
   // Theme variables
@@ -55,8 +55,10 @@ export default function HealthScreen() {
       style={styles.scrollView}
       contentContainerStyle={styles.scrollViewContent}
     >
+      {/** Personalised AI advice section */}
       <HealthAdviceSection />
 
+      {/** Users latest health data with averages and suggestions */}
       <HealthDataResponse
         logDate={latestEntry?.date}
         mood={latestEntry?.mood}
@@ -66,8 +68,10 @@ export default function HealthScreen() {
         averages={averages}
         suggestions={suggestions}
       />
+      {/** Allow users to log more health data */}
       <LogHealthData />
 
+      {/** Mindfullness / breathing section */}
       <TouchableOpacity
         style={styles.button}
         onPress={toggleVisibility}
@@ -98,6 +102,7 @@ export default function HealthScreen() {
         </View>
       )}
 
+      {/** Charting of applehealthkit data */}
       <View style={styles.chartContainer}>
         <View style={styles.chartWrapper}>
           <ProgressChart
@@ -112,6 +117,8 @@ export default function HealthScreen() {
             chartConfig={chartConfig}
             hideLegend={true}
           />
+
+          {/** Dynamically calculated Calorie target */}
           <Text style={styles.chartLabel}>
             {`Energy Burned\n${Math.round(
               energy

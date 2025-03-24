@@ -1,3 +1,5 @@
+// Define type safety for theme management
+
 export type ThemeColors = {
   background: string;
   text: string;
