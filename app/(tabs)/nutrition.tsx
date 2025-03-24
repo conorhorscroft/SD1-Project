@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PieChart } from "react-native-chart-kit";
+import { BarChart } from "react-native-chart-kit";
 import { useAuth } from "@/hooks/useAuth";
+import * as Progress from "react-native-progress";
 import axios from "axios";
 
 export default function NutritionScreen() {
@@ -15,6 +17,7 @@ export default function NutritionScreen() {
   const [successMessage, setSuccessMessage] = useState("");
   const [totalCalories, setTotalCalories] = useState(null);
   const [dailyCalories, setDailyCalories] = useState("");
+  const [dailyCaloriesInput, setDailyCaloriesInput] = useState("");
   const [isDailyCaloriesSaved, setIsDailyCaloriesSaved] = useState(false);
 
   const fetchNutritionData = async () => {
@@ -75,7 +78,10 @@ export default function NutritionScreen() {
       fats: meal.fat,
       hydration: 0,
       userId: user?.id,
+      mealName: meal.title
     };
+
+    console.log("requestData:"+ requestData.mealName);
 
     try {
       const response = await axios.post(
@@ -115,6 +121,90 @@ export default function NutritionScreen() {
     }
   };
 
+
+  const fetchDailyCalories = async () => {
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+          `https://SD1-backend.onrender.com/api/nutrition/retrieve-daily-calories/${user?.id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 200 && response.data.totalCalories) {
+        setTotalCalories(response.data.totalCalories);
+        setDailyCalories(response.data.totalCalories.toString());
+        setIsDailyCaloriesSaved(true);
+      }
+    } catch (err) {
+      console.error("Failed to retrieve daily calories. User may not have set it yet.", err.message);
+    }
+  };
+
+  // Fetch daily calories and nutrition Information when component mounts
+  useEffect(() => {
+    if (token && user?.id) {
+      fetchDailyCalories();
+      fetchNutritionDataFromBackend(); // Fetch meals from backend
+    }
+  }, [token, user?.id]);
+
+  const fetchNutritionDataFromBackend = async () => {
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+          `https://SD1-backend.onrender.com/api/nutrition/retrieve-nutrition-data/${user?.id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+
+      console.log("fetchNutritionDataFromBackend asdas");
+
+      if (response.status === 200 && response.data.length > 0) {
+        console.log("fetchNutritionDataFromBackend response:"+ response);
+
+        const retrievedMeals = response.data.map(meal => ({
+          id: meal.id,
+          title: meal.mealName,
+          calories: meal.calories,
+          protein: meal.protein,
+          carbs: meal.carbs,
+          fat: meal.fats,
+
+        }));
+
+
+        setMeals(retrievedMeals);
+        const totalNutritionData = retrievedMeals.reduce(
+            (acc, meal) => ({
+              calories: acc.calories + meal.calories,
+              protein: acc.protein + meal.protein,
+              carbs: acc.carbs + meal.carbs,
+              fat: acc.fat + meal.fat,
+            }),
+            { calories: 0, protein: 0, carbs: 0, fat: 0 }
+        );
+
+        setTotalNutrition(totalNutritionData);
+        setTotalCalories(prev => prev - totalNutritionData.calories);
+      }
+    } catch (err) {
+      console.error("Failed to retrieve nutrition data.", err.message);
+    }
+  };
+
+  // Fetch daily calories when component mounts
+  // useEffect(() => {
+  //   fetchDailyCalories();
+  // }, []);
+
   // Function to save daily calories to the backend
   const saveDailyCalories = async () => {
 
@@ -122,27 +212,27 @@ export default function NutritionScreen() {
       console.error("User is not authenticated");
       return;
     }
+    const enteredCalories = parseInt(dailyCaloriesInput)
 
-
-    if (!dailyCalories || isNaN(dailyCalories)) {
+    if (!enteredCalories || isNaN(enteredCalories)) {
       setError("Please enter a valid number for calories");
       return;
     }
 
     const requestData = {
-      totalCalories: dailyCalories
+      totalCalories: enteredCalories
     };
 
     console.log(
         "Request URL:",
-        `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
+        `https://SD1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`
     );
     console.log("Request Data:", requestData);
     console.log("Headers:", { Authorization: `Bearer ${token}` });
 
     try {
       const response = await axios.post(
-          `https://sd1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
+          `https://SD1-backend.onrender.com/api/nutrition/save-daily-calories/${user?.id}`,
           requestData,
           {
             headers: {
@@ -154,11 +244,13 @@ export default function NutritionScreen() {
       console.log('Response Data:', response.data);
 
       // Since Axios automatically parses the response body, just use response.data
-      if (response.status === 201) { // 201 is the standard success status code for creation
-        setTotalCalories(dailyCalories);
-        setSuccessMessage("Daily calories saved successfully!");
+      if (response.status === 200 || response.status ==201) {
+        setDailyCalories(enteredCalories);
+        setTotalCalories(enteredCalories);
+        setSuccessMessage("Daily calories persisted successfully!");
         setError("");
         setIsDailyCaloriesSaved(true);
+        fetchNutritionDataFromBackend();
       } else {
         setSuccessMessage("");
         setError(response.data.error || "Failed to save data. Please try again.");
@@ -182,7 +274,7 @@ export default function NutritionScreen() {
         <ScrollView>
           <View style={styles.container}>
             <Text style={styles.header}>Nutrition</Text>
-            <TextInput style={styles.input} placeholder="Enter your daily calories" keyboardType="numeric" value={dailyCalories} onChangeText={setDailyCalories} />
+            <TextInput style={styles.input} placeholder="Enter your daily calories" keyboardType="numeric" value={dailyCaloriesInput}   onChangeText={setDailyCaloriesInput} />
             <Button title="Save Daily Calories" onPress={saveDailyCalories} />
 
             {successMessage ? <Text style={styles.successText}>{successMessage}</Text> : null}
@@ -192,7 +284,43 @@ export default function NutritionScreen() {
 
             <TextInput style={styles.input} placeholder="Enter food title" value={foodTitle} onChangeText={setFoodTitle} />
             <Button title="Get Nutrition Info" onPress={fetchNutritionData} disabled={!isDailyCaloriesSaved} />
-            <Text style={styles.totalCaloriesText}>{isDailyCaloriesSaved ? `Total Calories Left: ${totalCalories} kcal` : null}</Text>
+            <View style={{ width: "100%", alignItems: "center", marginVertical: 10 }}>
+              <Text style={styles.totalCaloriesText}>
+                {isDailyCaloriesSaved ? `Total Calories Left: ${totalCalories} kcal` : null}
+              </Text>
+
+              {isDailyCaloriesSaved && (
+                  <View style={{ position: "relative", width: 300 }}>
+                    {/* Progress Bar */}
+                    <Progress.Bar
+                        progress={Math.max(0, totalCalories / dailyCalories)}
+                        width={300}
+                        height={12}
+                        color={totalCalories > 0 ? "#36A2EB" : "red"}
+                        borderRadius={8}
+                        borderWidth={1}
+                    />
+
+                    {/* Overlay Text for Total Calories inside Progress Bar */}
+                    <Text style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      textAlign: "center",
+                      lineHeight: 12,  // Match the height of the progress bar
+                      color: "Black",
+                      fontWeight: "bold",
+                      fontSize: 14
+                    }}>
+                      {dailyCalories} kcal
+                    </Text>
+                  </View>
+              )}
+            </View>
+
+
             {meals.length > 0 && (
                 <View style={styles.mealsContainer}>
                   <Text style={styles.header}>Meals Added:</Text>
