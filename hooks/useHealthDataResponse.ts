@@ -122,14 +122,12 @@ const useHealthDataResponse = (): UseHealthDataResponse => {
       );
     }
     if (parseFloat(avgMood) > 5) {
-      newSuggestions.push(
-        "You've been in a great mood recently! Your healthy lifestyle is paying off."
-      );
+      newSuggestions.push("You've been in a great mood recently!");
     }
 
     if (parseFloat(avgMood) < 5) {
       newSuggestions.push(
-        "Your mood has been on the low side recently. Excersing regularly, eating healthily, sleeping well, reducing screen time, and being outdoors are all great ways to improve this! However, don't forgot to check in with friends, family, or your GP if you feel you're struggling."
+        "Your mood has been on the low side recently. Exercising regularly, eating healthily, sleeping well, reducing screen time, and being outdoors are all great ways to improve this! However, don't forgot to check in with friends, family, or your GP if you feel you're struggling."
       );
     }
 
